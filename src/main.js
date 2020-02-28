@@ -7,7 +7,6 @@ import Icon from 'vue-awesome/components/Icon'
 
 Vue.component('v-icon', Icon)
 Vue.use(BootstrapVue)
-Vue.use(VueSidebarMenu)
 
 Vue.config.productionTip = false
 
