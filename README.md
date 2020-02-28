@@ -1,4 +1,5 @@
-# smartcommit-ui
+# SmartCommitUI
+## The Web UI for SmartCommit Committer Evaluation.
 
 ## Project setup
 ```
