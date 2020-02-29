@@ -26,6 +26,7 @@
 
 <script>
 import { SweetModal } from 'sweet-modal-vue'
+import qs from 'qs'
 // import MonacoEditor from './vue-monaco'
 
 export default {
@@ -47,9 +48,16 @@ export default {
   },
   methods: {
     submitEmail() {
-      console.log(this.userEmail)
+      console.log(qs.stringify({ email: this.userEmail }))
       // query server for repo and commitid
-
+      this.axios
+        .get('/api/getData/?email=' + this.userEmail)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
       // init data with the response
 
       // allow the user to operate
