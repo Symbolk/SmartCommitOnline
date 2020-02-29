@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <review msg="Welcome to Your Vue.js App" />
+    <NavBar></NavBar>
+    <Review msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
+import NavBar from './components/NavBar.vue'
 import Review from './components/Review.vue'
 
 export default {
   name: 'App',
   components: {
+    NavBar,
     Review
   }
 }
@@ -22,6 +25,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }
 </style>

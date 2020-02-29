@@ -58,13 +58,20 @@ export default {
         // .post('/api/getData', qs.stringify({ email: this.userEmail }))
         .then(response => {
           console.log(response)
+          // close the modal
+          this.$refs.emailModal.close()
+          // fit the data with response
+          this.$root.$emit(
+            'showNavBar',
+            this.repoName,
+            this.commitID,
+            this.userEmail
+          )
+          // allow the user to operate
         })
         .catch(error => {
           console.log(error)
         })
-      // init data with the response
-
-      // allow the user to operate
     }
   },
   mounted() {
