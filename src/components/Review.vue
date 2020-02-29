@@ -48,6 +48,11 @@ export default {
   methods: {
     submitEmail() {
       console.log(this.userEmail)
+      // query server for repo and commitid
+
+      // init data with the response
+
+      // allow the user to operate
     }
   },
   mounted() {
