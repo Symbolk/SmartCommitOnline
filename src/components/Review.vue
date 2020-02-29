@@ -51,7 +51,11 @@ export default {
       console.log(qs.stringify({ email: this.userEmail }))
       // query server for repo and commitid
       this.axios
-        .get('/api/getData/?email=' + this.userEmail)
+        // .get('/api/getData/?email=' + this.userEmail)
+        .get('/api/getData', {
+          email: this.userEmail
+        })
+        // .post('/api/getData', qs.stringify({ email: this.userEmail }))
         .then(response => {
           console.log(response)
         })

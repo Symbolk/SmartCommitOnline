@@ -15,6 +15,7 @@ app.use('/getData', (req, res) => {
   // let user = { email: req.query.email }
   // console.log(req);
   res.send('Hello ' + req.query.email)
+  // res.send('Hello ' + req.body.email)
   // let condition = { email: user.email }
   // RepoModel.findOne(condition, function(err, doc) {
   //   if (err) {
