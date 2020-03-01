@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 
 app.use('/getData', (req, res) => {
   // let user = { email: req.query.email }
-  // console.log(req);
+  // console.log(req)
   res.send('Hello ' + req.query.email)
   // res.send('Hello ' + req.body.email)
   // let condition = { email: user.email }

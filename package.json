@@ -27,7 +27,8 @@
     "sweet-modal-vue": "^2.0.0",
     "vue": "^2.6.11",
     "vue-awesome": "^4.0.2",
-    "vue-axios": "^2.1.5"
+    "vue-axios": "^2.1.5",
+    "vue-smooth-dnd": "^0.8.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.0",

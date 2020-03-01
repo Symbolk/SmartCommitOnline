@@ -7,7 +7,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item active href="#">Committer Review</b-nav-item>
+          <b-nav-item active href="#">{{userEmail}}</b-nav-item>
           <!-- <b-nav-item disabled href="#">Changes View</b-nav-item> -->
         </b-navbar-nav>
 
@@ -83,8 +83,8 @@ export default {
   mounted() {
     this.$root.$on('showNavBar', 
     (repoName, commitID, userEmail) => {
-      this.repoName = repoName + ': ',
-        this.commitID = 'Commit: ' + commitID,
+        this.repoName = repoName + ': ',
+        this.commitID =  commitID,
         this.userEmail = userEmail
     })
   }
