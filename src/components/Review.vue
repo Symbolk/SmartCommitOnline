@@ -21,56 +21,59 @@
       </b-input-group>
       <!-- <sweet-button @click="submitEmail()" slot="button" variant="success">Submit</sweet-button> -->
     </sweet-modal>
-    <!-- <b-container>
-      <b-row align-v="start" class="group-view" no-gutters>
-        <b-col> -->
-          <div class="card-scene">
-            <Container
-              :drop-placeholder="upperDropPlaceholderOptions"
-              @drag-start="dragStart"
-              @drop="onColumnDrop($event)"
-              drag-handle-selector=".column-drag-handle"
-              orientation="horizontal"
-            >
-              <Draggable :key="column.id" v-for="column in scene.children">
-                <div :class="column.props.className">
-                  <div class="card-column-header">
-                    <span class="column-drag-handle">&#x2630;</span>
-                    {{ column.name }}
-                  </div>
-                  <Container
-                    :drop-placeholder="dropPlaceholderOptions"
-                    :get-child-payload="getCardPayload(column.id)"
-                    @drag-end="(e) => log('drag end', e)"
-                    @drag-start="(e) => log('drag start', e)"
-                    @drop="(e) => onCardDrop(column.id, e)"
-                    drag-class="card-ghost"
-                    drop-class="card-ghost-drop"
-                    group-name="col"
-                  >
-                    <Draggable :key="card.id" v-for="card in column.children">
-                      <div :class="card.props.className" :style="card.props.style">
-                        <p>{{ card.data }}</p>
-                      </div>
-                    </Draggable>
-                  </Container>
+    <!-- <b-container> -->
+    <b-row align-v="start" no-gutters>
+      <b-col class="group-view">
+        <div class="card-scene">
+          <Container
+            :drop-placeholder="upperDropPlaceholderOptions"
+            @drag-start="dragStart"
+            @drop="onColumnDrop($event)"
+            drag-handle-selector=".column-drag-handle"
+            orientation="horizontal"
+          >
+            <Draggable :key="column.id" v-for="column in scene.children">
+              <div :class="column.props.className">
+                <div class="card-column-header">
+                  <span class="column-drag-handle">&#x2630;</span>
+                  {{ column.name }}
                 </div>
-              </Draggable>
-            </Container>
-          </div>
-        <!-- </b-col></b-row> -->
+                <Container
+                  :drop-placeholder="dropPlaceholderOptions"
+                  :get-child-payload="getCardPayload(column.id)"
+                  @drag-end="(e) => log('drag end', e)"
+                  @drag-start="(e) => log('drag start', e)"
+                  @drop="(e) => onCardDrop(column.id, e)"
+                  drag-class="card-ghost"
+                  drop-class="card-ghost-drop"
+                  group-name="col"
+                >
+                  <Draggable :key="card.id" v-for="card in column.children">
+                    <div :class="card.props.className" :style="card.props.style">
+                      <p>{{ card.data }}</p>
+                    </div>
+                  </Draggable>
+                </Container>
+              </div>
+            </Draggable>
+          </Container>
+        </div>
+      </b-col>
+    </b-row>
 
-      <!-- <b-row align-v="center" class="diff-view"> -->
-      <MonacoEditor
-        :diffEditor="true"
-        :language="language"
-        :options="sideOptions"
-        :original="codeLeft"
-        :value="codeRight"
-        class="editor"
-        ref="sideDiffEditor"
-      />
-      <!-- </b-row> -->
+    <b-row align-v="center" no-gutters>
+      <b-col class="diff-view">
+        <MonacoEditor
+          :diffEditor="true"
+          :language="language"
+          :options="sideOptions"
+          :original="codeLeft"
+          :value="codeRight"
+          class="editor"
+          ref="sideDiffEditor"
+        />
+      </b-col>
+    </b-row>
     <!-- </b-container> -->
   </div>
 </template>
@@ -114,7 +117,7 @@ const scene = {
       orientation: 'vertical',
       className: 'card-container'
     },
-    children: generateItems(+(Math.random() * 10).toFixed() + 5, j => ({
+    children: generateItems(+(Math.random()).toFixed() + 5, j => ({
       type: 'draggable',
       id: `${i}${j}`,
       props: {
@@ -233,7 +236,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
-  margin: 40px 0 0;
+  /* margin: 40px 0 0; */
 }
 ul {
   list-style-type: none;
