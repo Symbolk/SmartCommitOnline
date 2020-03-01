@@ -21,9 +21,9 @@
       </b-input-group>
       <!-- <sweet-button @click="submitEmail()" slot="button" variant="success">Submit</sweet-button> -->
     </sweet-modal>
-    <b-container>
-      <b-row align-v="start" class="group-view">
-        <b-col cols="12">
+    <!-- <b-container>
+      <b-row align-v="start" class="group-view" no-gutters>
+        <b-col> -->
           <div class="card-scene">
             <Container
               :drop-placeholder="upperDropPlaceholderOptions"
@@ -58,21 +58,20 @@
               </Draggable>
             </Container>
           </div>
-        </b-col>
-      </b-row>
+        <!-- </b-col></b-row> -->
 
-      <b-row align-v="center" class="diff-view">
-        <MonacoEditor
-          :diffEditor="true"
-          :language="language"
-          :options="sideOptions"
-          :original="codeLeft"
-          :value="codeRight"
-          class="editor"
-          ref="sideDiffEditor"
-        />
-      </b-row>
-    </b-container>
+      <!-- <b-row align-v="center" class="diff-view"> -->
+      <MonacoEditor
+        :diffEditor="true"
+        :language="language"
+        :options="sideOptions"
+        :original="codeLeft"
+        :value="codeRight"
+        class="editor"
+        ref="sideDiffEditor"
+      />
+      <!-- </b-row> -->
+    <!-- </b-container> -->
   </div>
 </template>
 
@@ -86,22 +85,22 @@ import MonacoEditor from './vue-monaco'
 
 const lorem = `Lorem.`
 const columnNames = ['Lorem', 'Ipsum', 'Consectetur', 'Eiusmod']
-// const cardColors = [
-//   'azure',
-//   'beige',
-//   'bisque',
-//   'blanchedalmond',
-//   'burlywood',
-//   'cornsilk',
-//   'gainsboro',
-//   'ghostwhite',
-//   'ivory',
-//   'khaki'
-// ]
-// const pickColor = () => {
-//   const rand = Math.floor(Math.random() * 10)
-//   return cardColors[rand]
-// }
+const cardColors = [
+  'azure',
+  'beige',
+  'bisque',
+  'blanchedalmond',
+  'burlywood',
+  'cornsilk',
+  'gainsboro',
+  'ghostwhite',
+  'ivory',
+  'khaki'
+]
+const pickColor = () => {
+  const rand = Math.floor(Math.random() * 10)
+  return cardColors[rand]
+}
 const scene = {
   type: 'container',
   props: {
@@ -120,7 +119,7 @@ const scene = {
       id: `${i}${j}`,
       props: {
         className: 'card',
-        style: {}
+        style: { backgroundColor: pickColor() }
       },
       data: lorem.slice(0, Math.floor(Math.random() * 150) + 30)
     }))
@@ -146,8 +145,8 @@ export default {
       userEmail: '',
 
       language: 'javascript',
-      codeLeft: '',
-      codeRight: '',
+      codeLeft: 'gggggggg',
+      codeRight: 'ggggggg',
       // diff editor options
       sideOptions: {
         // selectOnLineNumbers: true
@@ -281,5 +280,9 @@ a {
 
 .diff-view {
   height: 40vh;
+}
+
+.editor {
+  height: 50vh;
 }
 </style>
