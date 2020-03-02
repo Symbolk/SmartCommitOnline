@@ -48,11 +48,13 @@
                   drop-class="card-ghost-drop"
                   group-name="col"
                 >
-                  <Draggable :key="card.id" v-for="card in column.children">
-                    <div :class="card.props.className" :style="card.props.style">
-                      <p>{{ card.data }}</p>
-                    </div>
-                  </Draggable>
+                  <!-- <vue-scroll> -->
+                    <Draggable :key="card.id" v-for="card in column.children">
+                      <div :class="card.props.className" :style="card.props.style">
+                        <p>{{ card.data }}</p>
+                      </div>
+                    </Draggable>
+                  <!-- </vue-scroll> -->
                 </Container>
               </div>
             </Draggable>
@@ -117,7 +119,7 @@ const scene = {
       orientation: 'vertical',
       className: 'card-container'
     },
-    children: generateItems(+(Math.random()).toFixed() + 5, j => ({
+    children: generateItems(+Math.random().toFixed() + 5, j => ({
       type: 'draggable',
       id: `${i}${j}`,
       props: {

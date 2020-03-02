@@ -1,14 +1,14 @@
 
 .card-scene {
-    padding: 20px;
+    padding: 5px;
     /* background-color: #fff; */
 }
 
 .card-container {
-    width: 200px;
-    padding: 10px;
+    width: 300px;
+    padding: 5px;
     margin: 5px;
-    margin-right: 20px;
+    margin-right: 5px;
     background-color: #f3f3f3;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
 }
@@ -18,15 +18,17 @@
     /* border: 1px solid #ccc; */
     background-color: white;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
-    padding: 10px;
+    padding: 5px;
 }
 
 .card-column-header {
-    font-size: 18px;
+    font-size: 15px;
 }
 
 .column-drag-handle {
-    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
     padding: 5px;
 }
 
