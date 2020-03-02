@@ -38,24 +38,26 @@
                   <span class="column-drag-handle">&#x2630;</span>
                   {{ column.name }}
                 </div>
-                <Container
-                  :drop-placeholder="dropPlaceholderOptions"
-                  :get-child-payload="getCardPayload(column.id)"
-                  @drag-end="(e) => log('drag end', e)"
-                  @drag-start="(e) => log('drag start', e)"
-                  @drop="(e) => onCardDrop(column.id, e)"
-                  drag-class="card-ghost"
-                  drop-class="card-ghost-drop"
-                  group-name="col"
-                >
-                  <!-- <vue-scroll> -->
-                    <Draggable :key="card.id" v-for="card in column.children">
-                      <div :class="card.props.className" :style="card.props.style">
-                        <p>{{ card.data }}</p>
-                      </div>
-                    </Draggable>
-                  <!-- </vue-scroll> -->
-                </Container>
+                <div class="scroll-area">
+                  <vue-scroll>
+                    <Container
+                      :drop-placeholder="dropPlaceholderOptions"
+                      :get-child-payload="getCardPayload(column.id)"
+                      @drag-end="(e) => log('drag end', e)"
+                      @drag-start="(e) => log('drag start', e)"
+                      @drop="(e) => onCardDrop(column.id, e)"
+                      drag-class="card-ghost"
+                      drop-class="card-ghost-drop"
+                      group-name="col"
+                    >
+                      <Draggable :key="card.id" v-for="card in column.children">
+                        <div :class="card.props.className" :style="card.props.style">
+                          <p>{{ card.data }}</p>
+                        </div>
+                      </Draggable>
+                    </Container>
+                  </vue-scroll>
+                </div>
               </div>
             </Draggable>
           </Container>
@@ -281,6 +283,14 @@ a {
 
 .group-view {
   height: 40vh;
+}
+
+.scroll-area {
+  /* overflow: auto; */
+  height: 35vh;
+  /* position: fixed; */
+  /* z-index: 2; */
+  padding: 5px;
 }
 
 .diff-view {
