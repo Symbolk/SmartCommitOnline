@@ -13,7 +13,10 @@
         <template v-slot:prepend>
           <b-input-group-text>Email</b-input-group-text>
         </template>
-        <b-form-input v-model="userEmail"></b-form-input>
+        <b-input-group-prepend is-text>
+          <b-icon icon="envelope"></b-icon>
+        </b-input-group-prepend>
+        <b-form-input placeholder="me@example.com" type="email" v-model="userEmail"></b-form-input>
 
         <b-input-group-append>
           <b-button @click="submitEmail()" text="Button" variant="success">Submit</b-button>
@@ -25,51 +28,51 @@
     <b-row align-v="start" no-gutters>
       <b-col class="group-view">
         <div class="card-scene">
-          <vue-scroll>
-          <Container
-            :drop-placeholder="upperDropPlaceholderOptions"
-            @drag-start="dragStart"
-            @drop="onColumnDrop($event)"
-            drag-handle-selector=".column-drag-handle"
-            orientation="horizontal"
-          >
-            <Draggable :key="column.id" v-for="column in scene.children">
-              <div :class="column.props.className">
-                <div class="card-column-header">
-                  <span class="column-drag-handle">&#x2630;</span>
-                  <span class="column-drag-handle" title="Drag to Move" v-b-tooltip.hover>
-                    <v-icon name="code" />
-                  </span>
-                  {{ column.name }}
+          <vue-scroll :ops="scrollOptions">
+            <Container
+              :drop-placeholder="upperDropPlaceholderOptions"
+              @drag-start="dragStart"
+              @drop="onColumnDrop($event)"
+              drag-handle-selector=".column-drag-handle"
+              orientation="horizontal"
+            >
+              <Draggable :key="column.id" v-for="column in scene.children">
+                <div :class="column.props.className">
+                  <div class="card-column-header">
+                    <span class="column-drag-handle">&#x2630;</span>
+                    <span class="column-drag-handle" title="Drag to Move" v-b-tooltip.hover>
+                      <b-icon icon="document-diff" scale="1.5"></b-icon>
+                    </span>
+                    {{ column.name }}
+                  </div>
+                  <div class="scroll-area">
+                    <vue-scroll>
+                      <Container
+                        :drop-placeholder="dropPlaceholderOptions"
+                        :get-child-payload="getCardPayload(column.id)"
+                        @drag-end="(e) => log('drag end', e)"
+                        @drag-start="(e) => log('drag start', e)"
+                        @drop="(e) => onCardDrop(column.id, e)"
+                        drag-class="card-ghost"
+                        drop-class="card-ghost-drop"
+                        group-name="col"
+                      >
+                        <Draggable :key="card.id" v-for="card in column.children">
+                          <div
+                            :class="card.props.className"
+                            :style="card.props.style"
+                            @dblclick="showDiff()"
+                            class="no-select"
+                          >
+                            <p>{{ card.data }}</p>
+                          </div>
+                        </Draggable>
+                      </Container>
+                    </vue-scroll>
+                  </div>
                 </div>
-                <div class="scroll-area">
-                  <vue-scroll>
-                    <Container
-                      :drop-placeholder="dropPlaceholderOptions"
-                      :get-child-payload="getCardPayload(column.id)"
-                      @drag-end="(e) => log('drag end', e)"
-                      @drag-start="(e) => log('drag start', e)"
-                      @drop="(e) => onCardDrop(column.id, e)"
-                      drag-class="card-ghost"
-                      drop-class="card-ghost-drop"
-                      group-name="col"
-                    >
-                      <Draggable :key="card.id" v-for="card in column.children">
-                        <div
-                          :class="card.props.className"
-                          :style="card.props.style"
-                          @dblclick="showDiff()"
-                          class="no-select"
-                        >
-                          <p>{{ card.data }}</p>
-                        </div>
-                      </Draggable>
-                    </Container>
-                  </vue-scroll>
-                </div>
-              </div>
-            </Draggable>
-          </Container>
+              </Draggable>
+            </Container>
           </vue-scroll>
         </div>
       </b-col>
@@ -162,13 +165,20 @@ export default {
       userEmail: '',
 
       language: 'java',
-      codeLeft: 'Double Click a Card to View Diff',
-      codeRight: 'Double Click a Card to View Diff',
+      pathLeft: 'Double Click a Card to View Diff',
+      pathRight: 'Double Click a Card to View Diff',
+      codeLeft: 'Old Content',
+      codeRight: 'New Content',
       // diff editor options
       sideOptions: {
         // selectOnLineNumbers: true
         readOnly: true,
         renderSideBySide: true
+      },
+
+      scrollOptions: {
+        wheelDirectionReverse: true,
+        keepShow: true
       },
 
       scene,
@@ -213,9 +223,7 @@ export default {
     },
 
     // show diff according user double click
-    showDiff() {
-      
-    },
+    showDiff() {},
 
     onColumnDrop(dropResult) {
       const scene = Object.assign({}, this.scene)
@@ -255,7 +263,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 ul {
   list-style-type: none;
   padding: 0;
@@ -268,9 +275,9 @@ a {
   color: #42b983;
 }
 
-p{
-    margin: 0;
-    font-size: 12px;
+p {
+  margin: 0;
+  font-size: 12px;
 }
 
 .no-select {
