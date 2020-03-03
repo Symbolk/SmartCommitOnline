@@ -192,7 +192,7 @@ export default {
       },
 
       scrollOptions: {
-        // wheelDirectionReverse: true,
+        wheelDirectionReverse: true
         // keepShow: true
       },
 
@@ -211,6 +211,7 @@ export default {
   },
   methods: {
     submitEmail() {
+      // if (this.email !== '' && this.email.length > 0) {
       console.log(qs.stringify({ email: this.userEmail }))
       // query server for repo and commitid
       this.axios
@@ -235,6 +236,7 @@ export default {
         .catch(error => {
           console.log(error)
         })
+      // }
     },
 
     // show diff according user double click
@@ -323,7 +325,7 @@ p {
 }
 
 .group-view {
-  height: 40vh;
+  height: 42vh;
 }
 
 .scroll-area {
@@ -335,10 +337,10 @@ p {
 }
 
 .diff-view {
-  height: 40vh;
+  height: 38vh;
 }
 
 .editor {
-  height: 50vh;
+  height: 48vh;
 }
 </style>
