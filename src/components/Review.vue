@@ -78,6 +78,21 @@
       </b-col>
     </b-row>
 
+    <b-row no-gutters>
+      <b-col>
+        <h6>
+          {{pathLeft}}
+          <b-badge>Old</b-badge>
+        </h6>
+      </b-col>
+      <b-col>
+        <h6>
+          {{pathRight}}
+          <b-badge variant="success">New</b-badge>
+        </h6>
+      </b-col>
+    </b-row>
+
     <b-row align-v="center" no-gutters>
       <b-col class="diff-view">
         <MonacoEditor
@@ -177,8 +192,8 @@ export default {
       },
 
       scrollOptions: {
-        wheelDirectionReverse: true,
-        keepShow: true
+        // wheelDirectionReverse: true,
+        // keepShow: true
       },
 
       scene,
