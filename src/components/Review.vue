@@ -25,6 +25,7 @@
     <b-row align-v="start" no-gutters>
       <b-col class="group-view">
         <div class="card-scene">
+          <vue-scroll>
           <Container
             :drop-placeholder="upperDropPlaceholderOptions"
             @drag-start="dragStart"
@@ -36,6 +37,9 @@
               <div :class="column.props.className">
                 <div class="card-column-header">
                   <span class="column-drag-handle">&#x2630;</span>
+                  <span class="column-drag-handle" title="Drag to Move" v-b-tooltip.hover>
+                    <v-icon name="code" />
+                  </span>
                   {{ column.name }}
                 </div>
                 <div class="scroll-area">
@@ -51,7 +55,12 @@
                       group-name="col"
                     >
                       <Draggable :key="card.id" v-for="card in column.children">
-                        <div :class="card.props.className" :style="card.props.style">
+                        <div
+                          :class="card.props.className"
+                          :style="card.props.style"
+                          @dblclick="showDiff()"
+                          class="no-select"
+                        >
                           <p>{{ card.data }}</p>
                         </div>
                       </Draggable>
@@ -61,6 +70,7 @@
               </div>
             </Draggable>
           </Container>
+          </vue-scroll>
         </div>
       </b-col>
     </b-row>
@@ -90,8 +100,8 @@ import { applyDrag, generateItems } from './utils/helpers'
 import qs from 'qs'
 import MonacoEditor from './vue-monaco'
 
-const lorem = `Lorem.`
-const columnNames = ['Lorem', 'Ipsum', 'Consectetur', 'Eiusmod']
+const lorem = `/Users/symbolk/.mergebot/repos/IntelliMerge_mergebot/smart_commit/current/src/main/java/edu/pku/intellimerge/client/IntelliMerge.java`
+const columnNames = ['Group0', 'Group1', 'Group2', 'Group3']
 const cardColors = [
   'azure',
   'beige',
@@ -113,7 +123,7 @@ const scene = {
   props: {
     orientation: 'horizontal'
   },
-  children: generateItems(4, i => ({
+  children: generateItems(8, i => ({
     id: `column${i}`,
     type: 'container',
     name: columnNames[i],
@@ -147,13 +157,13 @@ export default {
   },
   data() {
     return {
-      repoName: '',
-      commitID: '',
+      repoName: 'repo',
+      commitID: 'commit',
       userEmail: '',
 
-      language: 'javascript',
-      codeLeft: 'gggggggg',
-      codeRight: 'ggggggg',
+      language: 'java',
+      codeLeft: 'Double Click a Card to View Diff',
+      codeRight: 'Double Click a Card to View Diff',
       // diff editor options
       sideOptions: {
         // selectOnLineNumbers: true
@@ -201,6 +211,12 @@ export default {
           console.log(error)
         })
     },
+
+    // show diff according user double click
+    showDiff() {
+      
+    },
+
     onColumnDrop(dropResult) {
       const scene = Object.assign({}, this.scene)
       scene.children = applyDrag(scene.children, dropResult)
@@ -239,9 +255,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  /* margin: 40px 0 0; */
-}
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -252,6 +266,11 @@ li {
 }
 a {
   color: #42b983;
+}
+
+p{
+    margin: 0;
+    font-size: 12px;
 }
 
 .no-select {

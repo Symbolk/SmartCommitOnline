@@ -7,6 +7,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Icon from 'vue-awesome/components/Icon'
 import vuescroll from 'vuescroll/dist/vuescroll-native'
 import 'vuescroll/dist/vuescroll.css'
+import 'vue-awesome/icons/code'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
