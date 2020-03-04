@@ -7,12 +7,12 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item active href="#">{{userEmail}}</b-nav-item>
+          <b-nav-item active href="#">Hello {{userName}}!</b-nav-item>
           <!-- <b-nav-item disabled href="#">Changes View</b-nav-item> -->
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
-          <b-nav-item active href="#">{{repoName}}{{commitID}}</b-nav-item>
+          <b-nav-item active href="#">{{repoName}}:{{commitID}}</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -68,6 +68,7 @@ export default {
     return {
       repoName: '',
       commitID: '',
+      userName: '',
       userEmail: ''
     }
   },
@@ -82,9 +83,10 @@ export default {
 
   mounted() {
     this.$root.$on('showNavBar', 
-    (repoName, commitID, userEmail) => {
-        this.repoName = repoName + ': ',
+    (repoName, commitID, userName, userEmail) => {
+        this.repoName = repoName,
         this.commitID =  commitID,
+        this.userName = userName,
         this.userEmail = userEmail
     })
   }

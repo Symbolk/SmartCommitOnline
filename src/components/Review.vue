@@ -177,6 +177,7 @@ export default {
     return {
       repoName: 'repo',
       commitID: 'commit',
+      userName: 'Developer',
       userEmail: '',
 
       language: 'java',
@@ -212,7 +213,6 @@ export default {
   methods: {
     submitEmail() {
       // if (this.email !== '' && this.email.length > 0) {
-      console.log(qs.stringify({ email: this.userEmail }))
       // query server for repo and commitid
       this.axios
         // .get('/api/getData/?email=' + this.userEmail)
@@ -221,17 +221,28 @@ export default {
         })
         // .post('/api/getData', qs.stringify({ email: this.userEmail }))
         .then(response => {
-          console.log(response)
-          // close the modal
-          this.$refs.emailModal.close()
-          // fit the data with response
-          this.$root.$emit(
-            'showNavBar',
-            this.repoName,
-            this.commitID,
-            this.userEmail
-          )
-          // allow the user to operate
+          if (response.data.length > 0) {
+            // with or without qs seems ok
+            // console.log(response.data[0].repo_name)
+            var commit_data = qs.parse(response.data)[0]
+            this.userName = commit_data.committer_name
+            this.repoName = commit_data.repo_name
+            this.commitID = commit_data.commit_id
+
+            // close the modal
+            this.$refs.emailModal.close()
+            // fit the data with response
+            this.$root.$emit(
+              'showNavBar',
+              this.repoName,
+              this.commitID,
+              this.userName,
+              this.userEmail
+            )
+            // allow the user to operate
+          } else {
+            console.log('No Matching Data.')
+          }
         })
         .catch(error => {
           console.log(error)

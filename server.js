@@ -21,9 +21,8 @@ app.use('/getData', (req, res) => {
     if (err) {
       console.log(err)
     } else {
-      if (docs.length > 0) {
-        res.send(docs)
-      }
+      console.log(docs.length)
+      res.send(docs)
     }
   })
 })
