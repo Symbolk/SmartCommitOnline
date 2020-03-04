@@ -3,7 +3,7 @@ const config = require('./config/dev')
 
 var bodyParser = require('body-parser')
 require('./db')
-var RepoModel = require('./models/repo').Repo
+var CommitModel = require('./models/commit').Commit
 
 const app = express()
 
@@ -12,20 +12,41 @@ app.use(bodyParser.json())
 // let router = express.Router()
 
 app.use('/getData', (req, res) => {
-  // let user = { email: req.query.email }
-  // console.log(req)
-  res.send('Hello ' + req.query.email)
+  let user = { email: req.query.email }
+  console.log(user.email)
+  // res.send('Hello ' + req.query.email)
   // res.send('Hello ' + req.body.email)
-  // let condition = { email: user.email }
-  // RepoModel.findOne(condition, function(err, doc) {
-  //   if (err) {
-  //     console.log(err)
-  //   } else {
-  //     if (doc) {
-  //       res.send(doc)
-  //     }
-  //   }
-  // })
+  let condition = { committer_email: user.email }
+  CommitModel.find(condition, function(err, docs) {
+    if (err) {
+      console.log(err)
+    } else {
+      if (docs.length > 0) {
+        res.send(docs)
+      }
+    }
+  })
+})
+
+var fs = require('fs')
+const readLocalFile = path => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf-8', (err, data) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(data)
+    })
+  })
+}
+app.use('/getFileContent', (req, res) => {
+  readLocalFile(req.query.file_path)
+    .then(content => {
+      res.send(content)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 })
 
 app.use('/', (req, res) => {
