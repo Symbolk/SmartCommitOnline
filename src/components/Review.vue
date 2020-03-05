@@ -158,7 +158,7 @@
           :original="codeLeft"
           :value="codeRight"
           class="editor"
-          ref="sideDiffEditor"
+          ref="diffEditor"
         />
       </b-col>
     </b-row>
@@ -220,7 +220,7 @@ export default {
       commits: [],
       currentCommit: '',
 
-      language: '',
+      language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
       pathRight: 'Double Click a Card to View Diff',
       codeLeft: 'Old Content',
@@ -343,8 +343,19 @@ export default {
           }
         })
         .then(res => {
-          this.codeLeft = res.data.left_content
-          this.codeRight = res.data.right_content
+          const monaco = require('monaco-editor')
+          this.$refs.diffEditor.getEditor().setModel({
+            original: monaco.editor.createModel(
+              res.data.left_content,
+              this.language
+            ),
+            modified: monaco.editor.createModel(
+              res.data.right_content,
+              this.language
+            )
+          })
+          // this.codeLeft = res.data.left_content
+          // this.codeRight = res.data.right_content
         })
         .catch(error => {
           console.log(error)
