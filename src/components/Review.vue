@@ -1,5 +1,61 @@
 <template>
   <div class="hello">
+    <!-- NavBar -->
+    <b-navbar :sticky="true" toggleable="lg" type="dark" variant="info">
+      <b-navbar-brand href="#">SmartCommit</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item active href="#">Hello {{userName}}!</b-nav-item>
+          <!-- <b-nav-item disabled href="#">Changes View</b-nav-item> -->
+        </b-navbar-nav>
+
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item active href="#">{{repoName}}:{{commitID}}</b-nav-item>
+          <b-dropdown right size="sm" variant="success">
+            <b-dropdown-item
+              :key="commit.commit_id"
+              @click="switchCommit(commit)"
+              v-for="commit in commits"
+            >{{commit.repo_name}}:{{commit.commit_id}}</b-dropdown-item>
+          </b-dropdown>
+        </b-navbar-nav>
+
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-form>
+            <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
+            <b-button @click="submitResults()" size="sm" type="submit" variant="warning">Submit</b-button>
+          </b-nav-form>
+
+          <!-- <b-nav-item-dropdown right text="Lang">
+            <b-dropdown-item href="#">EN</b-dropdown-item>
+            <b-dropdown-item href="#">中文</b-dropdown-item>
+          </b-nav-item-dropdown>-->
+
+          <!-- <b-nav-item-dropdown right>
+            <template v-slot:button-content>
+              <em>User</em>
+            </template>
+            <b-dropdown-item href="#">Settings</b-dropdown-item>
+            <b-dropdown-item href="#">Release Note</b-dropdown-item>
+          </b-nav-item-dropdown>-->
+
+          <b-nav-form>
+            <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
+            <b-button @click="showExitModal()" class="my-2 my-sm-0" size="sm" variant="danger">Exit</b-button>
+          </b-nav-form>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <sweet-modal icon="info" overlay-theme="dark" ref="exitModal">
+      <b>Are You Sure to Exit?</b>
+      <b-button @click="exit()" class="right-button" variant="outline-danger">Yes</b-button>
+    </sweet-modal>
+
+    <!-- Main UI -->
     <sweet-modal
       blocking
       hide-close-button
@@ -179,6 +235,8 @@ export default {
       commitID: 'commit',
       userName: 'Developer',
       userEmail: '',
+      // all commits to be reviewed
+      commits: [],
 
       language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
@@ -224,21 +282,17 @@ export default {
           if (response.data.length > 0) {
             // with or without qs seems ok
             // console.log(response.data[0].repo_name)
-            var commit_data = qs.parse(response.data)[0]
-            this.userName = commit_data.committer_name
-            this.repoName = commit_data.repo_name
-            this.commitID = commit_data.commit_id
+            // fit the data with response
+            var data = qs.parse(response.data)
+            this.commits = data
+
+            // show the first by default
+            this.userName = this.commits[0].committer_name
+            this.repoName = this.commits[0].repo_name
+            this.commitID = this.commits[0].commit_id
 
             // close the modal
             this.$refs.emailModal.close()
-            // fit the data with response
-            this.$root.$emit(
-              'showNavBar',
-              this.repoName,
-              this.commitID,
-              this.userName,
-              this.userEmail
-            )
             // allow the user to operate
           } else {
             console.log('No Matching Data.')
@@ -250,8 +304,19 @@ export default {
       // }
     },
 
+    switchCommit(commit) {
+      this.repoName = commit.repo_name
+      this.commitID = commit.commit_id
+    },
+
     // show diff according user double click
     showDiff() {},
+
+    showExitModal() {
+      this.$refs.exitModal.open()
+    },
+    submitResults() {},
+    exit() {},
 
     onColumnDrop(dropResult) {
       const scene = Object.assign({}, this.scene)

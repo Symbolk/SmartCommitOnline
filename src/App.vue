@@ -1,18 +1,15 @@
 <template>
   <div id="app">
-    <NavBar></NavBar>
-    <Review msg="Welcome to Your Vue.js App" />
+    <Review msg="Welcome to SmartCommit" />
   </div>
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
 import Review from './components/Review.vue'
 
 export default {
   name: 'App',
   components: {
-    NavBar,
     Review
   }
 }
