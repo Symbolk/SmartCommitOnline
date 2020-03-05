@@ -17,7 +17,7 @@
           <b-dropdown right size="sm" variant="success">
             <b-dropdown-item
               :key="commit.commit_id"
-              @click="switchCommit(commit)"
+              @click="showCommit(commit)"
               v-for="commit in commits"
             >{{commit.repo_name}}:{{commit.commit_id}}</b-dropdown-item>
           </b-dropdown>
@@ -99,7 +99,7 @@
                     <span class="column-drag-handle" title="Drag to Move" v-b-tooltip.hover>
                       <b-icon icon="document-diff" scale="1.5"></b-icon>
                     </span>
-                    {{ column.name }}
+                    {{ column.group_label }}
                   </div>
                   <div class="scroll-area">
                     <vue-scroll>
@@ -120,7 +120,7 @@
                             @dblclick="showDiff()"
                             class="no-select"
                           >
-                            <p>{{ card.data }}</p>
+                            <p>{{ card.file_index }}:{{card.diff_hunk_index}}</p>
                           </div>
                         </Draggable>
                       </Container>
@@ -174,8 +174,6 @@ import { applyDrag, generateItems } from './utils/helpers'
 import qs from 'qs'
 import MonacoEditor from './vue-monaco'
 
-const lorem = `/Users/symbolk/.mergebot/repos/IntelliMerge_mergebot/smart_commit/current/src/main/java/edu/pku/intellimerge/client/IntelliMerge.java`
-const columnNames = ['Group0', 'Group1', 'Group2', 'Group3']
 const cardColors = [
   'azure',
   'beige',
@@ -197,24 +195,7 @@ const scene = {
   props: {
     orientation: 'horizontal'
   },
-  children: generateItems(8, i => ({
-    id: `column${i}`,
-    type: 'container',
-    name: columnNames[i],
-    props: {
-      orientation: 'vertical',
-      className: 'card-container'
-    },
-    children: generateItems(+Math.random().toFixed() + 5, j => ({
-      type: 'draggable',
-      id: `${i}${j}`,
-      props: {
-        className: 'card',
-        style: { backgroundColor: pickColor() }
-      },
-      data: lorem.slice(0, Math.floor(Math.random() * 150) + 30)
-    }))
-  }))
+  children: []
 }
 
 export default {
@@ -237,6 +218,7 @@ export default {
       userEmail: '',
       // all commits to be reviewed
       commits: [],
+      currentCommit: '',
 
       language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
@@ -286,10 +268,8 @@ export default {
             var data = qs.parse(response.data)
             this.commits = data
 
-            // show the first by default
-            this.userName = this.commits[0].committer_name
-            this.repoName = this.commits[0].repo_name
-            this.commitID = this.commits[0].commit_id
+            // show the first commit by default
+            this.showCommit(data[0])
 
             // close the modal
             this.$refs.emailModal.close()
@@ -304,9 +284,47 @@ export default {
       // }
     },
 
-    switchCommit(commit) {
-      this.repoName = commit.repo_name
-      this.commitID = commit.commit_id
+    showCommit(commit) {
+      this.currentCommit = commit
+
+      this.userName = this.currentCommit.committer_name
+      this.repoName = this.currentCommit.repo_name
+      this.commitID = this.currentCommit.commit_id
+      var groups = this.currentCommit.groups
+
+      this.scene = {
+        type: 'container',
+        props: {
+          orientation: 'horizontal'
+        },
+        // groups
+        children: generateItems(groups.length, i => ({
+          id: i,
+          type: 'container',
+          name: `Group ${i}`,
+          props: {
+            orientation: 'vertical',
+            className: 'card-container'
+          },
+          group_label: groups[i].group_label,
+          commit_message: '',
+          committed: false, // whether the group has been committed
+          // diff hunks
+          children: generateItems(groups[i].diff_hunks.length, j => ({
+            type: 'draggable',
+            id: `${i}${j}`,
+            props: {
+              className: 'card',
+              style: { backgroundColor: pickColor() }
+            },
+            file_index: groups[i].diff_hunks[j].file_index,
+            diff_hunk_index: groups[i].diff_hunks[j].diff_hunk_index,
+            change_type: groups[i].diff_hunks[j],
+            a_hunk: groups[i].diff_hunks[j].a_hunk,
+            b_hunk: groups[i].diff_hunks[j].b_hunk
+          }))
+        }))
+      }
     },
 
     // show diff according user double click
