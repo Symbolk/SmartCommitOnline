@@ -27,25 +27,16 @@ app.use('/getData', (req, res) => {
   })
 })
 
-var fs = require('fs')
-const readLocalFile = path => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf-8', (err, data) => {
-      if (err) {
-        reject(err)
-      }
-      resolve(data)
-    })
-  })
+const fs = require('fs')
+const readLocalFileSync = path => {
+  return fs.readFileSync(path, 'utf-8').toString()
 }
-app.use('/getFileContent', (req, res) => {
-  readLocalFile(req.query.file_path)
-    .then(content => {
-      res.send(content)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+
+app.use('/getFileContents', (req, res) => {
+  res.send({
+    left_content: readLocalFileSync(req.query.left_file_path),
+    right_content: readLocalFileSync(req.query.right_file_path)
+  })
 })
 
 app.use('/', (req, res) => {

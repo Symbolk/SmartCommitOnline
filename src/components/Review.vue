@@ -117,7 +117,7 @@
                           <div
                             :class="card.props.className"
                             :style="card.props.style"
-                            @dblclick="showDiff()"
+                            @dblclick="showDiff(card.a_hunk, card.b_hunk)"
                             class="no-select"
                           >
                             <p>{{ card.file_index }}:{{card.diff_hunk_index}}</p>
@@ -220,15 +220,15 @@ export default {
       commits: [],
       currentCommit: '',
 
-      language: 'java',
+      language: '',
       pathLeft: 'Double Click a Card to View Diff',
       pathRight: 'Double Click a Card to View Diff',
       codeLeft: 'Old Content',
       codeRight: 'New Content',
       // diff editor options
       sideOptions: {
-        // selectOnLineNumbers: true
-        readOnly: true,
+        // selectOnLineNumbers: true,
+        // readOnly: true,
         renderSideBySide: true
       },
 
@@ -327,8 +327,29 @@ export default {
       }
     },
 
-    // show diff according user double click
-    showDiff() {},
+    // show diff when user double click
+    showDiff(a_hunk, b_hunk) {
+      this.pathLeft = a_hunk.git_path
+      this.pathRight = b_hunk.git_path
+      // var leftStartLine = a_hunk.start_line
+      // var rightStartLine = b_hunk.start_line
+      // var leftEndLine = a_hunk.end_line
+      // var rightEndLine = b_hunk.end_line
+      this.axios
+        .get('/api/getFileContents', {
+          params: {
+            left_file_path: a_hunk.file_path,
+            right_file_path: b_hunk.file_path
+          }
+        })
+        .then(res => {
+          this.codeLeft = res.data.left_content
+          this.codeRight = res.data.right_content
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
 
     showExitModal() {
       this.$refs.exitModal.open()
