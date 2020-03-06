@@ -120,7 +120,14 @@
                             @dblclick="showDiff(card.a_hunk, card.b_hunk)"
                             class="no-select"
                           >
-                            <p>{{ card.file_index }}:{{card.diff_hunk_index}}</p>
+                            <p title="Double Click to Show Diff" v-b-tooltip.hover>
+                              {{ card.a_hunk.git_path }}:{{card.a_hunk.start_line}}-{{card.a_hunk.end_line}}
+                              <b-badge pill style="float:right">Old</b-badge>
+                            </p>
+                            <p>
+                              {{ card.b_hunk.git_path }}:{{card.b_hunk.start_line}}-{{card.b_hunk.end_line}}
+                              <b-badge pill style="float:right" variant="success">New</b-badge>
+                            </p>
                           </div>
                         </Draggable>
                       </Container>
@@ -227,8 +234,8 @@ export default {
       codeRight: 'New Content',
       // diff editor options
       sideOptions: {
-        // selectOnLineNumbers: true,
-        // readOnly: true,
+        selectOnLineNumbers: true,
+        readOnly: true,
         renderSideBySide: true
       },
 
@@ -331,9 +338,9 @@ export default {
     showDiff(a_hunk, b_hunk) {
       this.pathLeft = a_hunk.git_path
       this.pathRight = b_hunk.git_path
-      // var leftStartLine = a_hunk.start_line
+      var leftStartLine = a_hunk.start_line
       // var rightStartLine = b_hunk.start_line
-      // var leftEndLine = a_hunk.end_line
+      var leftEndLine = a_hunk.end_line
       // var rightEndLine = b_hunk.end_line
       this.axios
         .get('/api/getFileContents', {
@@ -354,6 +361,12 @@ export default {
               this.language
             )
           })
+          this.$refs.diffEditor
+            .getEditor()
+            .revealRangeInCenter(
+              new monaco.Range(leftStartLine, 1, leftEndLine, 1)
+            )
+          // this.$refs.diffEditor.getModifiedEditor().revealLineInCenter(rightStartLine)
           // this.codeLeft = res.data.left_content
           // this.codeRight = res.data.right_content
         })
