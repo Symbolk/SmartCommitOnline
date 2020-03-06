@@ -236,7 +236,9 @@ export default {
       sideOptions: {
         selectOnLineNumbers: true,
         readOnly: true,
-        renderSideBySide: true
+        renderSideBySide: true,
+        ignoreTrimWhitespace: false,
+        // smoothScrolling: true
       },
 
       scrollOptions: {
@@ -339,8 +341,8 @@ export default {
       this.pathLeft = a_hunk.git_path
       this.pathRight = b_hunk.git_path
       var leftStartLine = a_hunk.start_line
-      // var rightStartLine = b_hunk.start_line
-      var leftEndLine = a_hunk.end_line
+      var rightStartLine = b_hunk.start_line
+      // var leftEndLine = a_hunk.end_line
       // var rightEndLine = b_hunk.end_line
       this.axios
         .get('/api/getFileContents', {
@@ -361,12 +363,16 @@ export default {
               this.language
             )
           })
-          this.$refs.diffEditor
-            .getEditor()
-            .revealRangeInCenter(
-              new monaco.Range(leftStartLine, 1, leftEndLine, 1)
-            )
-          // this.$refs.diffEditor.getModifiedEditor().revealLineInCenter(rightStartLine)
+          // if (leftEndLine < leftStartLine) {
+          //   leftEndLine = leftStartLine
+          // }
+          // this.$refs.diffEditor
+          //   .getEditor()
+          //   .revealRangeAtTop(
+          //     new monaco.Range(leftStartLine, 1, leftEndLine, 1)
+          //   )
+          this.$refs.diffEditor.getEditor().revealLineInCenter(leftStartLine)
+          this.$refs.diffEditor.getModifiedEditor().revealLineInCenter(rightStartLine)
           // this.codeLeft = res.data.left_content
           // this.codeRight = res.data.right_content
         })
