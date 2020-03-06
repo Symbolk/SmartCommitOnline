@@ -237,8 +237,9 @@ export default {
         selectOnLineNumbers: true,
         readOnly: true,
         renderSideBySide: true,
-        ignoreTrimWhitespace: false,
+        // ignoreTrimWhitespace: false,
         // smoothScrolling: true
+        renderFinalNewline: false
       },
 
       scrollOptions: {
