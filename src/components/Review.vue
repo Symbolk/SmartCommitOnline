@@ -42,18 +42,9 @@
             <b-dropdown-item href="#">Settings</b-dropdown-item>
             <b-dropdown-item href="#">Release Note</b-dropdown-item>
           </b-nav-item-dropdown>-->
-
-          <b-nav-form>
-            <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
-            <b-button @click="showExitModal()" class="my-2 my-sm-0" size="sm" variant="danger">Exit</b-button>
-          </b-nav-form>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <sweet-modal icon="info" overlay-theme="dark" ref="exitModal">
-      <b>Are You Sure to Exit?</b>
-      <b-button @click="exit()" class="right-button" variant="outline-danger">Yes</b-button>
-    </sweet-modal>
 
     <!-- Main UI -->
     <sweet-modal
@@ -386,7 +377,6 @@ export default {
       this.$refs.exitModal.open()
     },
     submitResults() {},
-    exit() {},
 
     onColumnDrop(dropResult) {
       const scene = Object.assign({}, this.scene)
