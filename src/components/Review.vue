@@ -28,7 +28,7 @@
           <b-nav-form>
             <b-button pill size="sm" variant="success">Steps: {{steps}}</b-button>
             <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
-            <b-button @click="submitResults()" size="sm" type="submit" variant="warning">Submit</b-button>
+            <b-button @click="submitResult()" size="sm" type="submit" variant="warning">Submit</b-button>
           </b-nav-form>
 
           <!-- <b-nav-item-dropdown right text="Lang">
@@ -168,7 +168,7 @@
 <script>
 import { SweetModal } from 'sweet-modal-vue'
 import { Container, Draggable } from 'vue-smooth-dnd'
-import { applyDrag, generateItems } from './utils/helpers'
+import { applyDrag, generateItems, getCurrentTime } from './utils/helpers'
 
 import qs from 'qs'
 import MonacoEditor from './vue-monaco'
@@ -310,6 +310,7 @@ export default {
             orientation: 'vertical',
             className: 'card-container'
           },
+          group_id: groups[i].group_id,
           group_label: groups[i].group_label,
           commit_msg: '',
           committed: false, // whether the group has been committed
@@ -378,7 +379,47 @@ export default {
         })
     },
 
-    submitResults() {},
+    submitResult() {
+      let manualGroups = []
+      for (let g of this.scene.children) {
+        let diffHunks = []
+        for (let d of g.children) {
+          diffHunks.push({
+            file_index: d.file_index,
+            diff_hunk_index: d.diff_hunk_index
+          })
+        }
+        manualGroups.push({
+          group_id: g.group_id,
+          group_label: g.group_label,
+          commit_msg: g.commit_msg,
+          diff_hunks: diffHunks
+        })
+      }
+
+      let manaulResult = {
+        email: this.userEmail,
+        time: getCurrentTime(),
+        steps: this.steps,
+        groups: manualGroups
+      }
+      this.axios
+        .post(
+          '/api/saveResult',
+          qs.stringify({
+            repo_name: this.repoName,
+            commit_id: this.commitID,
+            result: manaulResult
+          })
+        )
+        // .post('/api/getData', qs.stringify({ email: this.userEmail }))
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
 
     onColumnDrop(dropResult) {
       const scene = Object.assign({}, this.scene)
