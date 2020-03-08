@@ -26,6 +26,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
+            <b-button pill size="sm" variant="success">Steps: {{steps}}</b-button>
             <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
             <b-button @click="submitResults()" size="sm" type="submit" variant="warning">Submit</b-button>
           </b-nav-form>
@@ -217,6 +218,8 @@ export default {
       // all commits to be reviewed
       commits: [],
       currentCommit: '',
+      // steps that the user has taken
+      steps: 0,
 
       language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
@@ -308,7 +311,7 @@ export default {
             className: 'card-container'
           },
           group_label: groups[i].group_label,
-          commit_message: '',
+          commit_msg: '',
           committed: false, // whether the group has been committed
           // diff hunks
           children: generateItems(groups[i].diff_hunks.length, j => ({
@@ -364,7 +367,9 @@ export default {
           //     new monaco.Range(leftStartLine, 1, leftEndLine, 1)
           //   )
           this.$refs.diffEditor.getEditor().revealLineInCenter(leftStartLine)
-          this.$refs.diffEditor.getModifiedEditor().revealLineInCenter(rightStartLine)
+          this.$refs.diffEditor
+            .getModifiedEditor()
+            .revealLineInCenter(rightStartLine)
           // this.codeLeft = res.data.left_content
           // this.codeRight = res.data.right_content
         })
@@ -373,15 +378,13 @@ export default {
         })
     },
 
-    showExitModal() {
-      this.$refs.exitModal.open()
-    },
     submitResults() {},
 
     onColumnDrop(dropResult) {
       const scene = Object.assign({}, this.scene)
       scene.children = applyDrag(scene.children, dropResult)
       this.scene = scene
+      this.steps += 1
     },
     onCardDrop(columnId, dropResult) {
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
@@ -392,6 +395,7 @@ export default {
         newColumn.children = applyDrag(newColumn.children, dropResult)
         scene.children.splice(columnIndex, 1, newColumn)
         this.scene = scene
+        this.steps += 0.5
       }
     },
     getCardPayload(columnId) {
