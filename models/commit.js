@@ -24,6 +24,26 @@ const GroupSchema = new mongoose.Schema({
   diff_hunks: [DiffHunkSchema]
 })
 
+// schemas to store the manual results
+const SimpleDiffHunkSchema = new mongoose.Schema({
+  file_index: Number,
+  diff_hunk_index: Number
+})
+
+const SimpleGroupSchema = new mongoose.Schema({
+  group_id: { type: String, required: true },
+  group_label: String,
+  commit_msg: String, // manual commit msg
+  diff_hunks: [SimpleDiffHunkSchema]
+})
+
+const ManualResultSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  time: { type: String, required: true },
+  steps: { type: Number, default: 0 },
+  groups: [SimpleGroupSchema]
+})
+
 const CommitSchema = new mongoose.Schema(
   {
     //   repo_id: { type: Number, required: true, index: true },
@@ -31,7 +51,9 @@ const CommitSchema = new mongoose.Schema(
     commit_id: { type: String, required: true, index: true },
     committer_name: { type: String, required: true },
     committer_email: { type: String, required: true, index: true },
-    groups: [GroupSchema]
+    commit_msg: { type: String }, // original
+    groups: [GroupSchema],
+    manual_results: [ManualResultSchema]
   },
   { collection: 'commits' }
 )
