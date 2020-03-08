@@ -10,6 +10,17 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 // let router = express.Router()
+// app.disable('etag')
+
+// Control-Allow-Origin
+app.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With')
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  // res.header("Content-Type", "application/json;charset=utf-8");
+  next()
+})
 
 app.get('/getData', (req, res) => {
   let user = { email: req.query.email }
@@ -40,8 +51,7 @@ app.get('/getFileContents', (req, res) => {
 })
 
 // post and save manual results
-app.post('/saveResult', (req, res) => {
-  console.log(req.body)
+app.use('/saveResult', (req, res) => {
   let condition = {
     repo_name: req.body.repo_name,
     commit_id: req.body.commit_id
@@ -51,9 +61,10 @@ app.post('/saveResult', (req, res) => {
   CommitModel.findOneAndUpdate(condition, operation, err => {
     if (err) {
       console.log(err)
-      res.send(err)
+      // res.send(err)
     } else {
-      res.sendStatus(200)
+      console.log(req.body)
+      // res.send('OK')
     }
   })
 })
