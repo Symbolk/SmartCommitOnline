@@ -72,6 +72,11 @@
       </b-input-group>
       <!-- <sweet-button @click="submitEmail()" slot="button" variant="success">Submit</sweet-button> -->
     </sweet-modal>
+
+    <sweet-modal icon="success" ref="successModal" title="Success">{{successMessage}}</sweet-modal>
+    <sweet-modal icon="warning" ref="alertModal" title="Alert">{{alertMessage}}</sweet-modal>
+    <sweet-modal icon="error" ref="errorModal" title="Error">{{errorMessage}}</sweet-modal>
+
     <!-- <b-container> -->
     <b-row align-v="start" no-gutters>
       <b-col class="group-view">
@@ -211,6 +216,10 @@ export default {
   },
   data() {
     return {
+      successMessage: '',
+      alertMessage: '',
+      errorMessage: '',
+
       repoName: 'repo',
       commitID: 'commit',
       userName: 'Developer',
@@ -244,12 +253,12 @@ export default {
       scene,
       upperDropPlaceholderOptions: {
         className: 'cards-drop-preview',
-        animationDuration: '150',
+        animationDuration: '100',
         showOnTop: true
       },
       dropPlaceholderOptions: {
         className: 'drop-preview',
-        animationDuration: '150',
+        animationDuration: '100',
         showOnTop: true
       }
     }
@@ -409,14 +418,30 @@ export default {
           qs.stringify({
             repo_name: this.repoName,
             commit_id: this.commitID,
-            result: manaulResult
-          })
+            result: manaulResult,
+            timestamp: new Date().getTime()
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+          }
         )
-        // .post('/api/getData', qs.stringify({ email: this.userEmail }))
         .then(response => {
+          alert(response)
+
           console.log(response)
+          if (response.status == 200) {
+            this.successMessage = 'Successfully submit the result!'
+            this.$refs.successModal.open()
+          } else {
+            this.errorMessage = 'Error! Please email to shenbo@pku.edu.cn.'
+            this.$refs.errorModal.open()
+            console.log(response.data)
+          }
         })
         .catch(error => {
+          alert(error.mesage)
           console.log(error)
         })
     },
