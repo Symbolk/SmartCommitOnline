@@ -9,7 +9,8 @@ mongoose.Promise = require('bluebird')
 var options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  useFindAndModify: false,
+  useCreateIndex: true
   // auth: { authdb: 'CrowdJigsaw' },
   // user: config.user,
   // pass: config.pass
