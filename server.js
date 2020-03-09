@@ -1,5 +1,8 @@
 const express = require('express')
 const config = require('./config/dev')
+const logger = require('morgan')
+const FileStreamRotator = require('file-stream-rotator')
+const fs = require('fs')
 
 var bodyParser = require('body-parser')
 require('./db')
@@ -7,6 +10,33 @@ var CommitModel = require('./models/commit').Commit
 
 const app = express()
 
+var logDir = __dirname + '/logs'
+console.log('Access logs:' + logDir)
+// ensure log directory exists
+fs.existsSync(logDir) || fs.mkdirSync(logDir)
+// create a rotating write stream
+var accessLogStream = FileStreamRotator.getStream({
+  date_format: 'YYYYMMDD',
+  filename: logDir + '/%DATE%.log',
+  frequency: 'daily',
+  verbose: false
+})
+// setup the logger
+app.use(
+  logger(
+    'dev',
+    {
+      // skip: function(req, res) {
+      //   return (
+      //     res.statusCode == 304 ||
+      //     res.statusCode == 302 ||
+      //     res.statusCode == 200
+      //   )
+      // }
+    },
+    { stream: accessLogStream }
+  )
+)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 // let router = express.Router()
@@ -38,7 +68,6 @@ app.get('/getData', (req, res) => {
   })
 })
 
-const fs = require('fs')
 const readLocalFileSync = path => {
   return fs.readFileSync(path, 'utf-8').toString()
 }
@@ -61,10 +90,10 @@ app.use('/saveResult', (req, res) => {
   CommitModel.findOneAndUpdate(condition, operation, err => {
     if (err) {
       console.log(err)
-      // res.send(err)
+      res.send(err)
     } else {
       console.log(req.body)
-      // res.send('OK')
+      res.send('OK')
     }
   })
 })
