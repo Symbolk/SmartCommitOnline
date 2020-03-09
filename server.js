@@ -96,7 +96,7 @@ app.use('/saveResult', (req, res) => {
       res.send(err)
     } else {
       console.log(req.body)
-      res.send('OK')
+      res.sendStatus(200)
     }
   })
 })

@@ -28,7 +28,7 @@
           <b-nav-form>
             <b-button pill size="sm" variant="success">Steps: {{steps}}</b-button>
             <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
-            <b-button @click="submitResult()" size="sm" type="submit" variant="warning">Submit</b-button>
+            <b-button @click="submitResult()" size="sm" variant="warning">Submit</b-button>
           </b-nav-form>
 
           <!-- <b-nav-item-dropdown right text="Lang">
@@ -293,7 +293,8 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error)
+          this.errorMessage = error.response.data
+          this.$refs.errorModal.open()
         })
       // }
     },
@@ -385,7 +386,8 @@ export default {
           // this.codeRight = res.data.right_content
         })
         .catch(error => {
-          console.log(error)
+          this.errorMessage = error.response.data
+          this.$refs.errorModal.open()
         })
     },
 
@@ -413,6 +415,21 @@ export default {
         steps: this.steps,
         groups: manualGroups
       }
+
+      // this.axois
+      //   .post({
+      //     url: '/api/saveResult',
+      //     method: 'post',
+      //     data: qs.stringify({
+      //       repo_name: this.repoName,
+      //       commit_id: this.commitID,
+      //       result: manaulResult,
+      //       timestamp: new Date().getTime()
+      //     }),
+      //     headers: {
+      //       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      //     }
+      //   })
       this.axios
         .post(
           '/api/saveResult',
@@ -429,21 +446,17 @@ export default {
           }
         )
         .then(response => {
-          alert(response)
-
-          console.log(response)
           if (response.status == 200) {
             this.successMessage = 'Successfully submit the result!'
             this.$refs.successModal.open()
           } else {
             this.errorMessage = 'Error! Please email to shenbo@pku.edu.cn.'
             this.$refs.errorModal.open()
-            console.log(response.data)
           }
         })
         .catch(error => {
-          alert(error.mesage)
-          console.log(error)
+          this.errorMessage = error.response.data
+          this.$refs.errorModal.open()
         })
     },
 
