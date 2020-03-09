@@ -288,7 +288,8 @@ export default {
             this.$refs.emailModal.close()
             // allow the user to operate
           } else {
-            console.log('No Matching Data.')
+            this.alertMessage = 'No Matching Data for: ' + this.userEmail
+            this.$refs.alertModal.open()
           }
         })
         .catch(error => {

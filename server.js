@@ -3,6 +3,7 @@ const config = require('./config/dev')
 const logger = require('morgan')
 const FileStreamRotator = require('file-stream-rotator')
 const fs = require('fs')
+const path = require('path')
 
 var bodyParser = require('body-parser')
 require('./db')
@@ -17,22 +18,24 @@ fs.existsSync(logDir) || fs.mkdirSync(logDir)
 // create a rotating write stream
 var accessLogStream = FileStreamRotator.getStream({
   date_format: 'YYYYMMDD',
-  filename: logDir + '/%DATE%.log',
+  filename: path.join(logDir, '%DATE%.log'),
   frequency: 'daily',
   verbose: false
 })
+// let singleLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
+
 // setup the logger
 app.use(
   logger(
     'dev',
     {
-      // skip: function(req, res) {
-      //   return (
-      //     res.statusCode == 304 ||
-      //     res.statusCode == 302 ||
-      //     res.statusCode == 200
-      //   )
-      // }
+      skip: function(req, res) {
+        return (
+          res.statusCode == 304 ||
+          res.statusCode == 302 ||
+          res.statusCode == 200
+        )
+      }
     },
     { stream: accessLogStream }
   )
