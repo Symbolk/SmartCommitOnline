@@ -299,7 +299,7 @@ export default {
           }
         })
         .catch(error => {
-          this.errorMessage = error.response.data
+          this.errorMessage = error
           this.$refs.errorModal.open()
         })
       // }
@@ -401,7 +401,7 @@ export default {
           // this.codeRight = res.data.right_content
         })
         .catch(error => {
-          this.errorMessage = error.response.data
+          this.errorMessage = error
           this.$refs.errorModal.open()
         })
     },
@@ -490,7 +490,7 @@ export default {
           }
         })
         .catch(error => {
-          this.errorMessage = error.response.data
+          this.errorMessage = error
           this.$refs.errorModal.open()
         })
     },
