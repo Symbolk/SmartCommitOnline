@@ -19,7 +19,12 @@
               :key="commit.commit_id"
               @click="showCommit(commit)"
               v-for="commit in commits"
-            >{{commit.repo_name}}:{{commit.commit_id}}</b-dropdown-item>
+            >
+              <b-badge v-if="checkSubmitted(commit.repo_name, commit.commit_id)" variant="success">
+                <b-icon icon="check"></b-icon>
+              </b-badge>
+              {{commit.repo_name}}:{{commit.commit_id}}
+            </b-dropdown-item>
           </b-dropdown>
         </b-navbar-nav>
 
@@ -227,6 +232,7 @@ export default {
       // all commits to be reviewed
       commits: [],
       currentCommit: '',
+      submittedCommitIDs: new Set(),
       // steps that the user has taken
       steps: 0,
 
@@ -278,11 +284,11 @@ export default {
             // with or without qs seems ok
             // console.log(response.data[0].repo_name)
             // fit the data with response
-            var data = qs.parse(response.data)
-            this.commits = data
+            // var data = qs.parse(response.data)
+            this.commits = response.data
 
             // show the first commit by default
-            this.showCommit(data[0])
+            this.showCommit(this.commits[0])
 
             // close the modal
             this.$refs.emailModal.close()
@@ -299,8 +305,17 @@ export default {
       // }
     },
 
+    checkSubmitted(repo_name, commit_id) {
+      if (this.submittedCommitIDs.has(repo_name + ':' + commit_id)) {
+        return true
+      } else {
+        return false
+      }
+    },
+
     showCommit(commit) {
       this.currentCommit = commit
+      this.steps = 0
 
       this.userName = this.currentCommit.committer_name
       this.repoName = this.currentCommit.repo_name
@@ -447,7 +462,27 @@ export default {
         )
         .then(response => {
           if (response.status == 200) {
-            this.successMessage = 'Successfully submit the result!'
+            this.submittedCommitIDs.add(this.repoName + ':' + this.commitID)
+            let unreviewedNum =
+              this.commits.length - this.submittedCommitIDs.size
+            if (unreviewedNum <= 0) {
+              this.successMessage =
+                'Thanks SO MUCH! All commits have been reviewed.'
+            } else {
+              this.successMessage =
+                'Result submitted! ' + unreviewedNum + ' commits left.'
+              // jump to the next unreviewed
+              for (let next of this.commits) {
+                if (
+                  !this.submittedCommitIDs.has(
+                    next.repo_name + ':' + next.commit_id
+                  )
+                ) {
+                  this.showCommit(next)
+                  break
+                }
+              }
+            }
             this.$refs.successModal.open()
           } else {
             this.errorMessage = 'Error! Please email to shenbo@pku.edu.cn.'
