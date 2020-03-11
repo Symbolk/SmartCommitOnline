@@ -510,7 +510,12 @@ export default {
         newColumn.children = applyDrag(newColumn.children, dropResult)
         scene.children.splice(columnIndex, 1, newColumn)
         this.scene = scene
-        this.steps += 0.5
+        console.log(dropResult.removedIndex + '->' + dropResult.addedIndex)
+        if (
+          !(dropResult.removedIndex !== null && dropResult.addedIndex != null)
+        ) {
+          this.steps += 0.5
+        }
       }
     },
     getCardPayload(columnId) {
