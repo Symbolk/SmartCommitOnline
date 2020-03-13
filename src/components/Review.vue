@@ -15,16 +15,23 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item active href="#">{{repoName}}:{{commitID}}</b-nav-item>
           <b-dropdown right size="sm" variant="success">
-            <b-dropdown-item
-              :key="commit.commit_id"
-              @click="showCommit(commit)"
-              v-for="commit in commits"
-            >
-              <b-badge v-if="checkSubmitted(commit.repo_name, commit.commit_id)" variant="success">
-                <b-icon icon="check"></b-icon>
-              </b-badge>
-              {{commit.repo_name}}:{{commit.commit_id}}
-            </b-dropdown-item>
+            <div class="commits-scroll-area">
+              <vue-scroll>
+                <b-dropdown-item
+                  :key="commit.commit_id"
+                  @click="showCommit(commit)"
+                  v-for="commit in commits"
+                >
+                  <b-badge
+                    v-if="checkSubmitted(commit.repo_name, commit.commit_id)"
+                    variant="success"
+                  >
+                    <b-icon icon="check"></b-icon>
+                  </b-badge>
+                  {{commit.repo_name}}:{{commit.commit_id}}
+                </b-dropdown-item>
+              </vue-scroll>
+            </div>
           </b-dropdown>
         </b-navbar-nav>
 
@@ -103,7 +110,7 @@
                     </span>
                     {{ column.group_label }}
                   </div>
-                  <div class="scroll-area">
+                  <div class="card-scroll-area">
                     <vue-scroll>
                       <Container
                         :drop-placeholder="dropPlaceholderOptions"
@@ -596,7 +603,14 @@ p {
   height: 42vh;
 }
 
-.scroll-area {
+.commits-scroll-area {
+  /* overflow: auto; */
+  height: 40vh;
+  /* position: fixed; */
+  /* z-index: 2; */
+}
+
+.card-scroll-area {
   /* overflow: auto; */
   height: 35vh;
   /* position: fixed; */
