@@ -144,6 +144,7 @@
                   </div>
                 </div>
               </Draggable>
+              <b-button @click="appendNewGroup" variant="outline-success">+ New Group</b-button>
             </Container>
           </vue-scroll>
         </div>
@@ -421,6 +422,26 @@ export default {
         })
     },
 
+    appendNewGroup() {
+      const scene = Object.assign({}, this.scene)
+      let newGroupID = this.scene.children.length
+      scene.children.push({
+        id: newGroupID,
+        type: 'container',
+        name: `Group ${newGroupID}`,
+        props: {
+          orientation: 'vertical',
+          className: 'card-container'
+        },
+        group_id: 'group ${newGroupID}',
+        group_label: 'NEW',
+        commit_msg: '',
+        committed: false,
+        children: []
+      })
+      this.scene = scene
+    },
+
     submitResult() {
       let manualGroups = []
       for (let g of this.scene.children) {
@@ -525,7 +546,9 @@ export default {
         newColumn.children = applyDrag(newColumn.children, dropResult)
         scene.children.splice(columnIndex, 1, newColumn)
         this.scene = scene
-        console.log(dropResult.removedIndex + '->' + dropResult.addedIndex)
+        // index in the column
+        console.log(columnId + '->' + newColumn.id)
+        // move to another column
         if (
           !(dropResult.removedIndex !== null && dropResult.addedIndex != null)
         ) {
