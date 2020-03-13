@@ -195,10 +195,16 @@ const cardColors = [
   'ivory',
   'khaki'
 ]
-const pickColor = () => {
-  const rand = Math.floor(Math.random() * 10)
-  return cardColors[rand]
+
+const pickColor = fileIndex => {
+  if (fileIndex < cardColors.length) {
+    return cardColors[fileIndex]
+  } else {
+    let index = fileIndex % cardColors.length
+    return cardColors[index]
+  }
 }
+
 const scene = {
   type: 'container',
   props: {
@@ -346,7 +352,9 @@ export default {
             id: `${i}${j}`,
             props: {
               className: 'card',
-              style: { backgroundColor: pickColor() }
+              style: {
+                backgroundColor: pickColor(groups[i].diff_hunks[j].file_index)
+              }
             },
             file_index: groups[i].diff_hunks[j].file_index,
             diff_hunk_index: groups[i].diff_hunks[j].diff_hunk_index,
