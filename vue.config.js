@@ -1,6 +1,13 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = {
+  css: {
+    loaderOptions: {
+      sass: {
+        prependData: `@import "@/assets/variables.scss";`   
+      }
+    }
+  },
   devServer: {
     proxy: {
       '/api': {
