@@ -55,7 +55,7 @@ const CommitSchema = new mongoose.Schema(
     groups: [GroupSchema],
     manual_results: [ManualResultSchema]
   },
-  { collection: 'commits' }
+  { collection: 'results' }
 )
 
 console.log('[DB] Commit Schema Created.')
