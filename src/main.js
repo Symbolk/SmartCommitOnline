@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
-import './assets/cards.css'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import vuescroll from 'vuescroll/dist/vuescroll-native'
 import 'vuescroll/dist/vuescroll.css'
+import './assets/cards.css'
+
 // import Icon from 'vue-awesome/components/Icon'
 // import 'vue-awesome/icons/code'
 

@@ -18,7 +18,6 @@
           <b-popover
             :content="originalMsg"
             placement="bottom"
-            style="max-width: 600px !important; width: 600px !important;"
             target="repo-commit"
             title="Original Commit Message"
             triggers="hover focus"
@@ -612,11 +611,6 @@ a {
 p {
   margin: 0;
   font-size: 12px;
-}
-
-.popover {
-  max-width: 600px !important;
-  width: 600px !important;
 }
 
 .no-select {
