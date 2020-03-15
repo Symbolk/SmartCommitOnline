@@ -13,7 +13,17 @@
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
-          <b-nav-item active href="#">{{repoName}}:{{commitID}}</b-nav-item>
+          <b-nav-item active href="#" id="repo-commit">{{repoName}}:{{commitID}}</b-nav-item>
+
+          <b-popover
+            :content="originalMsg"
+            placement="bottom"
+            style="max-width: 600px !important; width: 600px !important;"
+            target="repo-commit"
+            title="Original Commit Message"
+            triggers="hover focus"
+          ></b-popover>
+
           <b-dropdown right size="sm" variant="success">
             <div class="commits-scroll-area">
               <vue-scroll>
@@ -245,12 +255,15 @@ export default {
       errorMessage: '',
 
       repoName: 'repo',
-      commitID: 'commit',
       userName: 'Developer',
       userEmail: '',
+
+      commitID: 'commit', // str
+      originalMsg: '',
+
+      currentCommit: '', // object
       // all commits to be reviewed
       commits: [],
-      currentCommit: '',
       submittedCommitIDs: new Set(),
       // steps that the user has taken
       steps: 0,
@@ -339,6 +352,7 @@ export default {
       this.userName = this.currentCommit.committer_name
       this.repoName = this.currentCommit.repo_name
       this.commitID = this.currentCommit.commit_id
+      this.originalMsg = this.currentCommit.commit_msg
       var groups = this.currentCommit.groups
 
       this.scene = {
@@ -598,6 +612,11 @@ a {
 p {
   margin: 0;
   font-size: 12px;
+}
+
+.popover {
+  max-width: 600px !important;
+  width: 600px !important;
 }
 
 .no-select {
