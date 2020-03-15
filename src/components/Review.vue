@@ -76,7 +76,12 @@
         <b-input-group-prepend is-text>
           <b-icon icon="envelope"></b-icon>
         </b-input-group-prepend>
-        <b-form-input placeholder="me@example.com" type="email" v-model="userEmail"></b-form-input>
+        <b-form-input
+          placeholder="me@example.com"
+          type="email"
+          v-model="userEmail"
+          v-on:keyup.enter="submitEmail()"
+        ></b-form-input>
 
         <b-input-group-append>
           <b-button @click="submitEmail()" text="Button" variant="success">Submit</b-button>
