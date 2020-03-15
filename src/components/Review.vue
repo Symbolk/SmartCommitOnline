@@ -16,12 +16,11 @@
           <b-nav-item active href="#" id="repo-commit">{{repoName}}:{{commitID}}</b-nav-item>
 
           <b-popover
-            :content="originalMsg"
             placement="bottom"
             target="repo-commit"
             title="Original Commit Message"
             triggers="hover focus"
-          ></b-popover>
+          >{{originalMsg}}</b-popover>
 
           <b-dropdown right size="sm" variant="success">
             <div class="commits-scroll-area">

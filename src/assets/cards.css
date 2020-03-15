@@ -13,8 +13,10 @@
 }
 
 .popover {
-  max-width: 600px !important;
-  width: 600px !important;
+  max-width: 500px !important;
+  /* width: 600px !important; */
+  white-space: pre-line;
+  white-space: pre-wrap;
 }
 
 .card {
