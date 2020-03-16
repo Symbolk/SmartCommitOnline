@@ -10,8 +10,8 @@ var options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
-  useCreateIndex: true
-  // auth: { authdb: 'CrowdJigsaw' },
+  useCreateIndex: true,
+  // auth: { authdb: 'smartcommit' },
   // user: config.user,
   // pass: config.pass
 }
