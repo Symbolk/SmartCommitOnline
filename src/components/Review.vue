@@ -75,7 +75,7 @@
       modal-theme="light"
       overlay-theme="light"
       ref="emailModal"
-      title="Please input your email to continue:"
+      title="Please input your Github Account Email to start:"
     >
       <b-input-group>
         <template v-slot:prepend>
