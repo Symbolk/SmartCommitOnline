@@ -272,9 +272,10 @@ export default {
   },
   data() {
     return {
-      successMessage: '',
-      alertMessage: '',
-      errorMessage: '',
+      successMsg: '',
+      alertMsg: '',
+      errorMsg: '',
+      submitMsg: '',
 
       repoName: 'repo',
       userName: 'Developer',
@@ -372,12 +373,12 @@ export default {
             this.$refs.emailModal.close()
             // allow the user to operate
           } else {
-            this.alertMessage = 'No Matching Data for: ' + this.userEmail
+            this.alertMsg = 'No Matching Data for: ' + this.userEmail
             this.$refs.alertModal.open()
           }
         })
         .catch(error => {
-          this.errorMessage = error
+          this.errorMsg = error
           this.$refs.errorModal.open()
         })
       // }
@@ -482,7 +483,7 @@ export default {
           // this.codeRight = res.data.right_content
         })
         .catch(error => {
-          this.errorMessage = error
+          this.errorMsg = error
           this.$refs.errorModal.open()
         })
     },
@@ -567,10 +568,10 @@ export default {
             let unreviewedNum =
               this.commits.length - this.submittedCommitIDs.size
             if (unreviewedNum <= 0) {
-              this.successMessage =
+              this.successMsg =
                 'Thanks SO MUCH! All commits have been reviewed.'
             } else {
-              this.successMessage =
+              this.successMsg =
                 'Result submitted! ' + unreviewedNum + ' commits left.'
               // jump to the next unreviewed
               for (let next of this.commits) {
@@ -591,7 +592,7 @@ export default {
           }
         })
         .catch(error => {
-          this.errorMessage = error
+          this.errorMsg = error
           this.$refs.errorModal.open()
         })
     },
