@@ -75,3 +75,7 @@
   border: 1px dashed #abc;
   margin: 5px 45px 5px 5px;
 }
+
+.sweet-modal .sweet-title > h2 {
+  line-height: inherit;
+}
