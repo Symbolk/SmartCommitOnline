@@ -98,7 +98,31 @@
       <!-- <sweet-button @click="submitEmail()" slot="button" variant="success">Submit</sweet-button> -->
     </sweet-modal>
 
-    <sweet-modal icon="success" ref="successModal" title="Success">{{successMessage}}</sweet-modal>
+    <sweet-modal icon="success" ref="successModal" title="Success">
+      {{successMessage}}
+      <br />
+      <br />
+      <b-input-group>
+        <template v-slot:prepend>
+          <b-dropdown :text="score" variant="success">
+            <b-dropdown-item
+              :key="s.id"
+              @click="setScore(s.value)"
+              v-for="s in scoreValues"
+            >{{s.value}}</b-dropdown-item>
+          </b-dropdown>
+        </template>
+        <b-form-input
+          placeholder="Any suggestions or comments for us?"
+          v-model="feedback"
+          v-on:keyup.enter="submitFeedback()"
+        ></b-form-input>
+
+        <template v-slot:append>
+          <b-button @click="submitFeedback()" text="Submit" variant="success">Submit</b-button>
+        </template>
+      </b-input-group>
+    </sweet-modal>
     <sweet-modal icon="warning" ref="alertModal" title="Alert">{{alertMessage}}</sweet-modal>
     <sweet-modal icon="error" ref="errorModal" title="Error">{{errorMessage}}</sweet-modal>
 
@@ -263,8 +287,32 @@ export default {
       // all commits to be reviewed
       commits: [],
       submittedCommitIDs: new Set(),
-      // steps that the user has taken
+      // feedbacks collected from the user
       steps: 0,
+      score: 'Rate',
+      scoreValues: [
+        {
+          id: 1,
+          value: '1'
+        },
+        {
+          id: 2,
+          value: '2'
+        },
+        {
+          id: 3,
+          value: '3'
+        },
+        {
+          id: 4,
+          value: '4'
+        },
+        {
+          id: 5,
+          value: '5'
+        }
+      ],
+      feedback: '',
 
       language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
@@ -546,6 +594,18 @@ export default {
           this.errorMessage = error
           this.$refs.errorModal.open()
         })
+    },
+    // rating and comments
+    setScore(score) {
+      this.score = score
+    },
+    submitFeedback() {
+      this.successMessage = 'Thanks for your feedback!'
+      setTimeout(() => {
+        this.$refs.successModal.close()
+        this.score = 'Rate'
+        this.feedback = ''
+      }, 2000)
     },
 
     onColumnDrop(dropResult) {
