@@ -41,6 +41,8 @@ const ManualResultSchema = new mongoose.Schema({
   email: { type: String, required: true },
   time: { type: String, required: true },
   steps: { type: Number, default: 0 },
+  score: { type: Number, default: 0 },
+  feedback: { type: String },
   groups: [SimpleGroupSchema]
 })
 

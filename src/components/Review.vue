@@ -48,7 +48,7 @@
           <b-nav-form>
             <b-button pill size="sm" variant="success">Steps: {{steps}}</b-button>
             <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
-            <b-button @click="submitResult()" size="sm" variant="warning">Submit</b-button>
+            <b-button @click="showSubmitModal()" size="sm" variant="warning">Submit</b-button>
           </b-nav-form>
 
           <!-- <b-nav-item-dropdown right text="Lang">
@@ -95,15 +95,21 @@
           <b-button @click="submitEmail()" text="Button" variant="success">Submit</b-button>
         </b-input-group-append>
       </b-input-group>
-      <!-- <sweet-button @click="submitEmail()" slot="button" variant="success">Submit</sweet-button> -->
     </sweet-modal>
 
-    <sweet-modal icon="success" ref="successModal" title="Success">
-      {{successMessage}}
-      <br />
+    <sweet-modal icon="info" ref="submitModal" title="Submit">
+      <h5>{{submitMsg}}</h5>
       <br />
       <b-input-group>
         <template v-slot:prepend>
+          <b-input-group-text>Feedback</b-input-group-text>
+        </template>
+        <b-form-textarea
+          placeholder="Any suggestions or comments are appreciated"
+          v-model="feedback"
+        ></b-form-textarea>
+
+        <template v-slot:append>
           <b-dropdown :text="score" variant="success">
             <b-dropdown-item
               :key="s.id"
@@ -111,20 +117,15 @@
               v-for="s in scoreValues"
             >{{s.value}}</b-dropdown-item>
           </b-dropdown>
-        </template>
-        <b-form-input
-          placeholder="Any suggestions or comments for us?"
-          v-model="feedback"
-          v-on:keyup.enter="submitFeedback()"
-        ></b-form-input>
-
-        <template v-slot:append>
-          <b-button @click="submitFeedback()" text="Submit" variant="success">Submit</b-button>
+          <b-button @click="submitResult()" text="Submit" variant="warning">Submit</b-button>
         </template>
       </b-input-group>
+      <!-- <sweet-button @click="submitResult()" slot="button" variant="success">Submit</sweet-button> -->
     </sweet-modal>
-    <sweet-modal icon="warning" ref="alertModal" title="Alert">{{alertMessage}}</sweet-modal>
-    <sweet-modal icon="error" ref="errorModal" title="Error">{{errorMessage}}</sweet-modal>
+
+    <sweet-modal icon="success" ref="successModal" title="Success">{{successMsg}}</sweet-modal>
+    <sweet-modal icon="warning" ref="alertModal" title="Alert">{{alertMsg}}</sweet-modal>
+    <sweet-modal icon="error" ref="errorModal" title="Error">{{errorMsg}}</sweet-modal>
 
     <!-- <b-container> -->
     <b-row align-v="start" no-gutters>
@@ -508,6 +509,11 @@ export default {
       this.scene = scene
     },
 
+    showSubmitModal() {
+      this.submitMsg = 'Rate the grouping results before submission?'
+      this.$refs.submitModal.open()
+    },
+
     submitResult() {
       let manualGroups = []
       for (let g of this.scene.children) {
@@ -526,11 +532,19 @@ export default {
         })
       }
 
+      let score = this.score
+      if (isNaN(score)) {
+        score = 0
+      } else {
+        score = Number(score)
+      }
       let manaulResult = {
         email: this.userEmail,
         time: getCurrentTime(),
         steps: this.steps,
-        groups: manualGroups
+        groups: manualGroups,
+        score: score,
+        feedback: this.feedback
       }
 
       // this.axois
@@ -586,8 +600,15 @@ export default {
               }
             }
             this.$refs.successModal.open()
+            this.$refs.submitModal.close()
+            this.score = 'Rate'
+            this.feedback = ''
+            setTimeout(() => {
+              this.$refs.successModal.close()
+            }, 3000)
           } else {
-            this.errorMessage = 'Error! Please email to shenbo@pku.edu.cn.'
+            this.errorMsg =
+              'Error! Please send the screenshot to shenbo@pku.edu.cn.'
             this.$refs.errorModal.open()
           }
         })
@@ -599,14 +620,6 @@ export default {
     // rating and comments
     setScore(score) {
       this.score = score
-    },
-    submitFeedback() {
-      this.successMessage = 'Thanks for your feedback!'
-      setTimeout(() => {
-        this.$refs.successModal.close()
-        this.score = 'Rate'
-        this.feedback = ''
-      }, 2000)
     },
 
     onColumnDrop(dropResult) {
