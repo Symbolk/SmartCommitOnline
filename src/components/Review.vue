@@ -291,6 +291,7 @@ export default {
       submittedCommitIDs: new Set(),
       // feedbacks collected from the user
       steps: 0,
+      actions: [], // the list of moving actions of the user
       score: 'Rate',
       scoreValues: [
         {
@@ -315,14 +316,18 @@ export default {
         }
       ],
       feedback: '',
+      // temp workaround for move action
+      fromCard: 'null:null',
+      toCard: 'null:null',
 
+      // code related data
       language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
       pathRight: 'Double Click a Card to View Diff',
       startLineLeft: '',
-      endLineLeft: '',
+      endLineLeft: ')',
       startLineRight: '',
-      endLineRight: '',
+      endLineRight: ')',
       codeLeft: 'Old Content',
       codeRight: 'New Content',
       // diff editor options
@@ -402,6 +407,7 @@ export default {
     showCommit(commit) {
       this.currentCommit = commit
       this.steps = 0
+      this.actions = []
 
       this.userName = this.currentCommit.committer_name
       this.repoName = this.currentCommit.repo_name
@@ -633,6 +639,11 @@ export default {
       scene.children = applyDrag(scene.children, dropResult)
       this.scene = scene
       this.steps += 1
+      let action =
+        '[Group]' + dropResult.removedIndex + '->' + dropResult.addedIndex
+
+      console.log(action)
+      this.actions.push(action)
     },
     onCardDrop(columnId, dropResult) {
       if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
@@ -643,8 +654,24 @@ export default {
         newColumn.children = applyDrag(newColumn.children, dropResult)
         scene.children.splice(columnIndex, 1, newColumn)
         this.scene = scene
-        // index in the column
-        console.log(columnId + '->' + newColumn.id)
+        // a trick to get the action
+        if (this.containsNull(this.fromCard)) {
+          this.fromCard = columnId + ':' + dropResult.removedIndex
+        }
+        if (this.containsNull(this.toCard)) {
+          this.toCard = newColumn.id + ':' + dropResult.addedIndex
+        }
+
+        if (
+          !this.containsNull(this.fromCard) &&
+          !this.containsNull(this.toCard)
+        ) {
+          let action = '[Hunk]' + this.fromCard + '->' + this.toCard
+          console.log(action)
+          this.actions.push(action)
+          this.fromCard = 'null:null'
+          this.toCard = 'null:null'
+        }
         // move to another column
         if (
           !(dropResult.removedIndex !== null && dropResult.addedIndex != null)
@@ -652,6 +679,9 @@ export default {
           this.steps += 0.5
         }
       }
+    },
+    containsNull(str) {
+      return str.indexOf('null') != -1
     },
     getCardPayload(columnId) {
       return index => {
@@ -661,7 +691,7 @@ export default {
       }
     },
     dragStart() {
-      console.log('drag started')
+      // console.log('drag started')
     },
     log(...params) {
       console.log(...params)
