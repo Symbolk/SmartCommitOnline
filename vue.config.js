@@ -4,7 +4,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: `@import "@/assets/variables.scss";`   
+        prependData: `@import "@/assets/variables.scss";`
       }
     }
   },
@@ -24,6 +24,7 @@ module.exports = {
   },
 
   configureWebpack: {
+    devtool: 'source-map',
     resolve: {
       symlinks: false
     },
