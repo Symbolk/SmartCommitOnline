@@ -153,8 +153,8 @@
                       <Container
                         :drop-placeholder="dropPlaceholderOptions"
                         :get-child-payload="getCardPayload(column.id)"
-                        @drag-end="(e) => log('drag end', e)"
-                        @drag-start="(e) => log('drag start', e)"
+                        @drag-end="(e) => log()"
+                        @drag-start="(e) => log()"
                         @drop="(e) => onCardDrop(column.id, e)"
                         drag-class="card-ghost"
                         drop-class="card-ghost-drop"
@@ -694,9 +694,10 @@ export default {
     dragStart() {
       // console.log('drag started')
     },
-    log(...params) {
-      console.log(...params)
-    }
+    log() {}
+    // log(...params) {
+    //   console.log(...params)
+    // }
   },
   mounted() {
     this.$refs.emailModal.open()
