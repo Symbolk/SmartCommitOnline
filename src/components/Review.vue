@@ -554,6 +554,7 @@ export default {
         email: this.userEmail,
         time: getCurrentTime(),
         steps: this.steps,
+        actions: this.actions,
         groups: manualGroups,
         score: score,
         feedback: this.feedback
