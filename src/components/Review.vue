@@ -192,13 +192,13 @@
     <b-row no-gutters>
       <b-col>
         <h6>
-          {{pathLeft}}
+          {{pathLeft}}:{{startLineLeft}}-{{endLineLeft}}
           <b-badge>Old</b-badge>
         </h6>
       </b-col>
       <b-col>
         <h6>
-          {{pathRight}}
+          {{pathRight}}:{{startLineRight}}-{{endLineRight}}
           <b-badge variant="success">New</b-badge>
         </h6>
       </b-col>
@@ -319,6 +319,10 @@ export default {
       language: 'java',
       pathLeft: 'Double Click a Card to View Diff',
       pathRight: 'Double Click a Card to View Diff',
+      startLineLeft: '',
+      endLineLeft: '',
+      startLineRight: '',
+      endLineRight: '',
       codeLeft: 'Old Content',
       codeRight: 'New Content',
       // diff editor options
@@ -326,6 +330,8 @@ export default {
         selectOnLineNumbers: true,
         readOnly: true,
         renderSideBySide: true,
+        glyphMargin: true,
+        // rulers: [1, 2, 3],
         // ignoreTrimWhitespace: false,
         // smoothScrolling: true
         renderFinalNewline: false
@@ -445,10 +451,11 @@ export default {
     showDiff(a_hunk, b_hunk) {
       this.pathLeft = a_hunk.git_path
       this.pathRight = b_hunk.git_path
-      var leftStartLine = a_hunk.start_line
-      var rightStartLine = b_hunk.start_line
-      // var leftEndLine = a_hunk.end_line
-      // var rightEndLine = b_hunk.end_line
+      this.startLineLeft = a_hunk.start_line
+      this.startLineRight = b_hunk.start_line
+      this.endLineLeft = a_hunk.end_line
+      this.endLineRight = b_hunk.end_line
+
       this.axios
         .get('/api/getFileContents', {
           params: {
@@ -468,18 +475,17 @@ export default {
               this.language
             )
           })
-          // if (leftEndLine < leftStartLine) {
-          //   leftEndLine = leftStartLine
-          // }
           // this.$refs.diffEditor
           //   .getEditor()
           //   .revealRangeAtTop(
           //     new monaco.Range(leftStartLine, 1, leftEndLine, 1)
           //   )
-          this.$refs.diffEditor.getEditor().revealLineInCenter(leftStartLine)
+          this.$refs.diffEditor
+            .getEditor()
+            .revealLineInCenter(this.startLineLeft)
           this.$refs.diffEditor
             .getModifiedEditor()
-            .revealLineInCenter(rightStartLine)
+            .revealLineInCenter(this.startLineRight)
           // this.codeLeft = res.data.left_content
           // this.codeRight = res.data.right_content
         })
@@ -684,6 +690,10 @@ a {
 p {
   margin: 0;
   font-size: 12px;
+}
+
+h6 {
+  margin-left: 10px;
 }
 
 .no-select {
