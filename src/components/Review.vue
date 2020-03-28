@@ -13,7 +13,10 @@
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
-          <b-nav-item active href="#" id="repo-commit">{{repoName}}:{{commitID}}</b-nav-item>
+          <b-nav-item active id="repo-commit">
+            {{repoName}}:
+            <b @dblclick="selectText">{{commitID}}</b>
+          </b-nav-item>
 
           <b-popover
             placement="bottom"
@@ -633,6 +636,20 @@ export default {
     // rating and comments
     setScore(score) {
       this.score = score
+    },
+
+    selectText(e) {
+      if (document.body.createTextRange) {
+        var range = document.body.createTextRange()
+        range.moveToElementText(e.target)
+        range.select()
+      } else {
+        let selection = window.getSelection()
+        let range = document.createRange()
+        range.selectNodeContents(e.target)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
     },
 
     onColumnDrop(dropResult) {
