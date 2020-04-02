@@ -118,7 +118,7 @@
               :key="s.id"
               @click="setScore(s.value)"
               v-for="s in scoreValues"
-            >{{s.value}}</b-dropdown-item>
+            >{{s.label}}</b-dropdown-item>
           </b-dropdown>
           <b-button @click="submitResult()" text="Submit" variant="warning">Submit</b-button>
         </template>
@@ -301,23 +301,28 @@ export default {
       scoreValues: [
         {
           id: 1,
-          value: '1'
+          value: '1',
+          label: 'Bad'
         },
         {
           id: 2,
-          value: '2'
+          value: '2',
+          label: 'Not Bad'
         },
         {
           id: 3,
-          value: '3'
+          value: '3',
+          label: 'Neutral'
         },
         {
           id: 4,
-          value: '4'
+          value: '4',
+          label: 'Good'
         },
         {
           id: 5,
-          value: '5'
+          value: '5',
+          label: 'Perfect'
         }
       ],
       feedback: '',
