@@ -169,8 +169,10 @@
                             :style="card.props.style"
                             @click="showDiff(card.a_hunk, card.b_hunk, card.description)"
                             class="no-select"
+                            title="Click to Show Diff & Drag to Move"
+                            v-b-tooltip.hover
                           >
-                            <p title="Click to Show Diff" v-b-tooltip.hover>
+                            <p>
                               {{ card.a_hunk.git_path }}:{{card.a_hunk.start_line}}-{{card.a_hunk.end_line}}
                               <b-badge pill style="float:right">Old</b-badge>
                             </p>
@@ -471,7 +473,7 @@ export default {
         title: 'Change Actions',
         toaster: 'b-toaster-bottom-center',
         solid: true,
-        variant: "success",
+        variant: 'success',
         // appendToast: false,
         noAutoHide: true
       })
