@@ -19,6 +19,13 @@
   white-space: pre-wrap;
 }
 
+.toast {
+  max-width: 800px !important;
+  /* width: 500px !important; */
+  white-space: pre-line;
+  white-space: pre-wrap;
+}
+
 .card {
   width: 270px;
   margin: 3px;
