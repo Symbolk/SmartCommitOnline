@@ -509,10 +509,10 @@ export default {
           //   )
           this.$refs.diffEditor
             .getEditor()
-            .revealLineInCenter(this.startLineLeft)
+            .revealLinesInCenter(this.startLineLeft, this.endLineLeft)
           this.$refs.diffEditor
             .getModifiedEditor()
-            .revealLineInCenter(this.startLineRight)
+            .revealLinesInCenter(this.startLineRight, this.endLineRight)
           // this.codeLeft = res.data.left_content
           // this.codeRight = res.data.right_content
         })
