@@ -167,10 +167,10 @@
                           <div
                             :class="card.props.className"
                             :style="card.props.style"
-                            @dblclick="showDiff(card.a_hunk, card.b_hunk)"
+                            @click="showDiff(card.a_hunk, card.b_hunk, card.description)"
                             class="no-select"
                           >
-                            <p title="Double Click to Show Diff" v-b-tooltip.hover>
+                            <p title="Click to Show Diff" v-b-tooltip.hover>
                               {{ card.a_hunk.git_path }}:{{card.a_hunk.start_line}}-{{card.a_hunk.end_line}}
                               <b-badge pill style="float:right">Old</b-badge>
                             </p>
@@ -448,7 +448,8 @@ export default {
             },
             file_index: groups[i].diff_hunks[j].file_index,
             diff_hunk_index: groups[i].diff_hunks[j].diff_hunk_index,
-            change_type: groups[i].diff_hunks[j],
+            change_type: groups[i].diff_hunks[j].change_type,
+            description: groups[i].diff_hunks[j].description,
             a_hunk: groups[i].diff_hunks[j].a_hunk,
             b_hunk: groups[i].diff_hunks[j].b_hunk
           }))
@@ -457,13 +458,23 @@ export default {
     },
 
     // show diff when user double click
-    showDiff(a_hunk, b_hunk) {
+    showDiff(a_hunk, b_hunk, description) {
       this.pathLeft = a_hunk.git_path
       this.pathRight = b_hunk.git_path
       this.startLineLeft = a_hunk.start_line
       this.startLineRight = b_hunk.start_line
       this.endLineLeft = a_hunk.end_line
       this.endLineRight = b_hunk.end_line
+
+      this.$bvToast.hide()
+      this.$bvToast.toast(description, {
+        title: 'Change Actions',
+        toaster: 'b-toaster-bottom-center',
+        solid: true,
+        variant: "success",
+        // appendToast: false,
+        noAutoHide: true
+      })
 
       this.axios
         .get('/api/getFileContents', {
