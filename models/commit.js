@@ -52,6 +52,7 @@ const CommitSchema = new mongoose.Schema(
     //   repo_id: { type: Number, required: true, index: true },
     repo_name: { type: String, required: true },
     commit_id: { type: String, required: true, index: true },
+    commit_time: { type: String },
     committer_name: { type: String, required: true },
     committer_email: { type: String, required: true, index: true },
     commit_msg: { type: String }, // original

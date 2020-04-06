@@ -19,9 +19,9 @@
           </b-nav-item>
 
           <b-popover
+            :title="`Original Commit Message @ ${commitTime}`"
             placement="bottom"
             target="repo-commit"
-            title="Original Commit Message"
             triggers="hover focus"
           >{{originalMsg}}</b-popover>
 
@@ -288,6 +288,7 @@ export default {
       userEmail: '',
 
       commitID: 'commit', // str
+      commitTime: '', // str
       originalMsg: '',
 
       currentCommit: '', // object
@@ -422,6 +423,7 @@ export default {
       this.userName = this.currentCommit.committer_name
       this.repoName = this.currentCommit.repo_name
       this.commitID = this.currentCommit.commit_id
+      this.commitTime = this.currentCommit.commit_time
       this.originalMsg = this.currentCommit.commit_msg
       var groups = this.currentCommit.groups
 
