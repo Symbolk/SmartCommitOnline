@@ -45,11 +45,27 @@
             </div>
           </b-dropdown>
         </b-navbar-nav>
+        <!-- &nbsp;&nbsp;&nbsp; -->
+        <b-button
+          @click="notComposite()"
+          pill
+          size="sm"
+          style="margin-left:5px;"
+          title="So you think this is not a composite commit?"
+          v-b-tooltip.hover
+          variant="outline-danger"
+        >Not Composite?</b-button>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-form>
-            <b-button pill size="sm" variant="success">Steps: {{steps}}</b-button>
+            <b-button
+              pill
+              size="sm"
+              title="Number of taken operations to adjust the result."
+              v-b-tooltip.hover
+              variant="success"
+            >Steps: {{steps}}</b-button>
             <!-- <b-form-input class="mr-sm-2" placeholder="Search" size="sm"></b-form-input> -->
             <b-button @click="showSubmitModal()" size="sm" variant="warning">Submit</b-button>
           </b-nav-form>
@@ -547,6 +563,88 @@ export default {
     showSubmitModal() {
       this.submitMsg = 'Rate the grouping results before submission?'
       this.$refs.submitModal.open()
+    },
+
+    notComposite() {
+      // put all diff hunks in one group to be non-composite
+      let manualGroups = []
+      let diffHunks = []
+
+      for (let g of this.scene.children) {
+        for (let d of g.children) {
+          diffHunks.push({
+            file_index: d.file_index,
+            diff_hunk_index: d.diff_hunk_index
+          })
+        }
+      }
+      manualGroups.push({
+        group_id: '0',
+        group_label: 'no-composite',
+        commit_msg: 'no-composite',
+        diff_hunks: diffHunks
+      })
+      let manualResult = {
+        email: this.userEmail,
+        time: getCurrentTime(),
+        steps: this.steps,
+        actions: this.actions,
+        groups: manualGroups,
+        score: 0, // 0 = no-composite
+        feedback: this.feedback
+      }
+      this.axios
+        .post(
+          '/api/saveResult',
+          qs.stringify({
+            repo_name: this.repoName,
+            commit_id: this.commitID,
+            result: manualResult,
+            timestamp: new Date().getTime()
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+          }
+        )
+        .then(response => {
+          if (response.status == 200) {
+            this.submittedCommitIDs.add(this.repoName + ':' + this.commitID)
+            let unreviewedNum =
+              this.commits.length - this.submittedCommitIDs.size
+            if (unreviewedNum <= 0) {
+              this.successMsg =
+                'Thanks SO MUCH! All commits have been reviewed.'
+            } else {
+              this.successMsg =
+                'Recorded as a non-composite commit! ' + unreviewedNum + ' commits left.'
+              // jump to the next unreviewed
+              for (let next of this.commits) {
+                if (
+                  !this.submittedCommitIDs.has(
+                    next.repo_name + ':' + next.commit_id
+                  )
+                ) {
+                  this.showCommit(next)
+                  break
+                }
+              }
+            }
+            this.$refs.successModal.open()
+            setTimeout(() => {
+              this.$refs.successModal.close()
+            }, 3000)
+          } else {
+            this.errorMsg =
+              'Error! Please send the screenshot to shenbo@pku.edu.cn.'
+            this.$refs.errorModal.open()
+          }
+        })
+        .catch(error => {
+          this.errorMsg = error
+          this.$refs.errorModal.open()
+        })
     },
 
     submitResult() {
