@@ -573,7 +573,7 @@ export default {
       } else {
         score = Number(score)
       }
-      let manaulResult = {
+      let manualResult = {
         email: this.userEmail,
         time: getCurrentTime(),
         steps: this.steps,
@@ -590,7 +590,7 @@ export default {
       //     data: qs.stringify({
       //       repo_name: this.repoName,
       //       commit_id: this.commitID,
-      //       result: manaulResult,
+      //       result: manualResult,
       //       timestamp: new Date().getTime()
       //     }),
       //     headers: {
@@ -603,7 +603,7 @@ export default {
           qs.stringify({
             repo_name: this.repoName,
             commit_id: this.commitID,
-            result: manaulResult,
+            result: manualResult,
             timestamp: new Date().getTime()
           }),
           {
