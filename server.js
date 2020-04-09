@@ -4,9 +4,10 @@ const logger = require('morgan')
 const FileStreamRotator = require('file-stream-rotator')
 const fs = require('fs')
 const path = require('path')
+// const mongoose = require('mongoose')
 
 var bodyParser = require('body-parser')
-require('./db')
+const mg = require('./db')
 var CommitModel = require('./models/commit').Commit
 
 const app = express()
@@ -35,7 +36,7 @@ app.use(
           res.statusCode == 302 ||
           res.statusCode == 200
         )
-      }
+      },
     },
     { stream: accessLogStream }
   )
@@ -55,13 +56,19 @@ app.all('*', function(req, res, next) {
   next()
 })
 
+const findInCol = (name, query, cb) => {
+  mg.connection.db.collection(name, function(err, collection) {
+    collection.find(query).toArray(cb)
+  })
+}
+
 app.get('/getData', (req, res) => {
   let user = { email: req.query.email }
+  // find repo/col name by email in contacts collection
+  // need to add another model/schema
   console.log(user.email)
-  // res.send('Hello ' + req.query.email)
-  // res.send('Hello ' + req.body.email)
   let condition = { committer_email: user.email }
-  CommitModel.find(condition, function(err, docs) {
+  findInCol('results', condition, (err, docs) => {
     if (err) {
       console.log(err)
     } else {
@@ -69,16 +76,24 @@ app.get('/getData', (req, res) => {
       res.send(docs)
     }
   })
+  // CommitModel.find(condition, function(err, docs) {
+  //   if (err) {
+  //     console.log(err)
+  //   } else {
+  //     console.log(docs.length)
+  //     res.send(docs)
+  //   }
+  // })
 })
 
-const readLocalFileSync = path => {
+const readLocalFileSync = (path) => {
   return fs.readFileSync(path, 'utf-8').toString()
 }
 
 app.get('/getFileContents', (req, res) => {
   res.send({
     left_content: readLocalFileSync(req.query.left_file_path),
-    right_content: readLocalFileSync(req.query.right_file_path)
+    right_content: readLocalFileSync(req.query.right_file_path),
   })
 })
 
@@ -90,7 +105,7 @@ app.use('/saveResult', (req, res) => {
   }
   let result = req.body.result
   let operation = { $push: { manual_results: result } }
-  CommitModel.findOneAndUpdate(condition, operation, err => {
+  CommitModel.findOneAndUpdate(condition, operation, (err) => {
     if (err) {
       console.log(err)
       res.send(err)
