@@ -58,8 +58,7 @@ const CommitSchema = new mongoose.Schema(
     commit_msg: { type: String }, // original
     groups: [GroupSchema],
     manual_results: [ManualResultSchema]
-  },
-  { collection: 'results' }
+  }
 )
 
 console.log('[DB] Commit Schema Created.')

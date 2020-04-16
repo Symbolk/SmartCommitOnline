@@ -9,6 +9,7 @@ const path = require('path')
 var bodyParser = require('body-parser')
 const mg = require('./db')
 var CommitModel = require('./models/commit').Commit
+var ContactModel = require('./models/contact').Contact
 
 const app = express()
 
@@ -21,7 +22,7 @@ var accessLogStream = FileStreamRotator.getStream({
   date_format: 'YYYYMMDD',
   filename: path.join(logDir, '%DATE%.log'),
   frequency: 'daily',
-  verbose: false
+  verbose: false,
 })
 // let singleLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
 
@@ -64,26 +65,30 @@ const findInCol = (name, query, cb) => {
 
 app.get('/getData', (req, res) => {
   let user = { email: req.query.email }
-  // find repo/col name by email in contacts collection
-  // need to add another model/schema
+  // find repo/col name by email in contacts
   console.log(user.email)
-  let condition = { committer_email: user.email }
-  findInCol('results', condition, (err, docs) => {
+  ContactModel.findOne(user, function(err, doc) {
     if (err) {
       console.log(err)
     } else {
-      console.log(docs.length)
-      res.send(docs)
+      if (doc) {
+        let repo = doc.repos[0].repo
+        console.log(repo)
+        // find commits data
+        let condition = { committer_email: user.email }
+        findInCol(repo, condition, (err, docs) => {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log(docs.length)
+            res.send(docs)
+          }
+        })
+      } else {
+        res.send([])
+      }
     }
   })
-  // CommitModel.find(condition, function(err, docs) {
-  //   if (err) {
-  //     console.log(err)
-  //   } else {
-  //     console.log(docs.length)
-  //     res.send(docs)
-  //   }
-  // })
 })
 
 const readLocalFileSync = (path) => {
@@ -101,7 +106,7 @@ app.get('/getFileContents', (req, res) => {
 app.use('/saveResult', (req, res) => {
   let condition = {
     repo_name: req.body.repo_name,
-    commit_id: req.body.commit_id
+    commit_id: req.body.commit_id,
   }
   let result = req.body.result
   let operation = { $push: { manual_results: result } }
