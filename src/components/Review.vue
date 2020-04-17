@@ -561,7 +561,7 @@ export default {
     },
 
     showSubmitModal() {
-      this.submitMsg = 'Rate the grouping results before submission?'
+      this.submitMsg = 'Rate & Comment the grouping results before submission?'
       this.$refs.submitModal.open()
     },
 
