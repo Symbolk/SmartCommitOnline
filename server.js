@@ -63,6 +63,12 @@ const findInCol = (name, query, cb) => {
   })
 }
 
+const findAndUpdateInCol = (name, query, update, cb) => {
+  mg.connection.db.collection(name, function(err, collection) {
+    collection.findOneAndUpdate(query, update).then(cb)
+  })
+}
+
 app.get('/getData', (req, res) => {
   let user = { email: req.query.email }
   // find repo/col name by email in contacts
@@ -104,13 +110,16 @@ app.get('/getFileContents', (req, res) => {
 
 // post and save manual results
 app.use('/saveResult', (req, res) => {
+  let repo = req.body.repo_name
   let condition = {
-    repo_name: req.body.repo_name,
+    repo_name: repo,
     commit_id: req.body.commit_id,
   }
   let result = req.body.result
   let operation = { $push: { manual_results: result } }
-  CommitModel.findOneAndUpdate(condition, operation, (err) => {
+  // update in specific repo
+  findAndUpdateInCol(repo, condition, operation, (err) => {
+    // CommitModel.findOneAndUpdate(condition, operation, (err) => {
     if (err) {
       console.log(err)
       res.send(err)
