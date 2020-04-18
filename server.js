@@ -111,13 +111,13 @@ const isEmpty = (str) => {
 
 app.get('/getFileContents', (req, res) => {
   // one side may be empty
-  if (isEmpty(res.query.left_file_path)) {
+  if (isEmpty(req.query.left_file_path)) {
     // added
     res.send({
       left_content: '',
       right_content: readLocalFileSync(req.query.right_file_path),
     })
-  } else if (isEmpty(res.query.right_file_path)) {
+  } else if (isEmpty(req.query.right_file_path)) {
     //deleted
     res.send({
       left_content: readLocalFileSync(req.query.left_file_path),
