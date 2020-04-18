@@ -101,11 +101,34 @@ const readLocalFileSync = (path) => {
   return fs.readFileSync(path, 'utf-8').toString()
 }
 
+const isEmpty = (str) => {
+  if (typeof str == 'undefined' || str == null || str == '') {
+    return true
+  } else {
+    return false
+  }
+}
+
 app.get('/getFileContents', (req, res) => {
-  res.send({
-    left_content: readLocalFileSync(req.query.left_file_path),
-    right_content: readLocalFileSync(req.query.right_file_path),
-  })
+  // one side may be empty
+  if (isEmpty(res.query.left_file_path)) {
+    // added
+    res.send({
+      left_content: '',
+      right_content: readLocalFileSync(req.query.right_file_path),
+    })
+  } else if (isEmpty(res.query.right_file_path)) {
+    //deleted
+    res.send({
+      left_content: readLocalFileSync(req.query.left_file_path),
+      right_content: '',
+    })
+  } else {
+    res.send({
+      left_content: readLocalFileSync(req.query.left_file_path),
+      right_content: readLocalFileSync(req.query.right_file_path),
+    })
+  }
 })
 
 // post and save manual results
