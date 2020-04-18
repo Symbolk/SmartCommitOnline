@@ -101,8 +101,9 @@ const readLocalFileSync = (path) => {
   return fs.readFileSync(path, 'utf-8').toString()
 }
 
-const isEmpty = (str) => {
-  if (typeof str == 'undefined' || str == null || str == '') {
+const isEmpty = (obj) => {
+  let str = String(obj)
+  if (typeof str == 'undefined' || str == null || str == '' || str.endsWith('/')) {
     return true
   } else {
     return false
