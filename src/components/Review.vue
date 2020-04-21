@@ -111,7 +111,12 @@
         ></b-form-input>
 
         <b-input-group-append>
-          <b-button @click="submitEmail()" text="Button" variant="success">Submit</b-button>
+          <b-button @click="submitEmail()" text="Button" variant="success">
+            <div v-if="loading==false">Submit</div>
+            <div v-else>
+              <b-spinner small type="grow"></b-spinner>Loading...
+            </div>
+          </b-button>
         </b-input-group-append>
       </b-input-group>
     </sweet-modal>
@@ -302,6 +307,7 @@ export default {
       repoName: 'repo',
       userName: 'Developer',
       userEmail: '',
+      loading: false,
 
       commitID: 'commit', // str
       commitTime: '', // str
@@ -389,6 +395,7 @@ export default {
   },
   methods: {
     submitEmail() {
+      this.loading = true
       // if (this.email !== '' && this.email.length > 0) {
       // query server for repo and commitid
       this.axios
@@ -398,6 +405,7 @@ export default {
         })
         // .post('/api/getData', qs.stringify({ email: this.userEmail }))
         .then(response => {
+          this.loading = false
           if (response.data.length > 0) {
             // with or without qs seems ok
             // console.log(response.data[0].repo_name)
@@ -618,7 +626,9 @@ export default {
                 'Thanks SO MUCH! All commits have been reviewed.'
             } else {
               this.successMsg =
-                'Recorded as a non-composite commit! ' + unreviewedNum + ' commits left.'
+                'Recorded as a non-composite commit! ' +
+                unreviewedNum +
+                ' commits left.'
               // jump to the next unreviewed
               for (let next of this.commits) {
                 if (
