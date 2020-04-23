@@ -59,7 +59,7 @@ app.all('*', function(req, res, next) {
 
 const findInCol = (name, query, cb) => {
   mg.connection.db.collection(name, function(err, collection) {
-    collection.find(query).toArray(cb)
+    collection.find(query).limit(50).toArray(cb)
   })
 }
 
