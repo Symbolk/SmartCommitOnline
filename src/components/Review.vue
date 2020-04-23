@@ -111,7 +111,7 @@
         ></b-form-input>
 
         <b-input-group-append>
-          <b-button @click="submitEmail()" text="Button" variant="success">
+          <b-button :disabled="loading" @click="submitEmail()" text="Button" variant="success">
             <div v-if="loading==false">Submit</div>
             <div v-else>
               <b-spinner small type="grow"></b-spinner>Loading...
