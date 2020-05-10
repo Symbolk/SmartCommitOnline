@@ -1,5 +1,5 @@
-# SmartCommitUI
-## The Web GUI for SmartCommit, mainly for committer evaluation.
+# SmartCommitOnline
+## An online evaluation system for SmartCommit.
 
 ## Project setup
 ```
