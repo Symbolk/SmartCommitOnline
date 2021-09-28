@@ -1,5 +1,8 @@
 # SmartCommitOnline
-## An online evaluation system for SmartCommit.
+## An online evaluation system for SmartCommit. Invited commit authors can login, review, and validate decomposition results of composite commits.
+
+![image](https://user-images.githubusercontent.com/14107297/135006131-fe936310-10b9-4bdd-97ff-1eb774e104ca.png)
+
 
 ## Project setup
 ```
