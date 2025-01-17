@@ -22,7 +22,7 @@
     "monaco-editor": "^0.20.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
     "mongodb": "^3.5.4",
-    "mongoose": "^8.8.3",
+    "mongoose": "^8.9.5",
     "morgan": "^1.9.1",
     "nano-assign": "^1.0.1",
     "node-sass": "^7.0.0",
